@@ -4,13 +4,26 @@ import com.example.asm2.entity.Group;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 
 import java.util.List;
+
+import static com.example.asm2.util.DummyData.addGroupData;
 
 
 public class GroupController {
 
+    @FXML
+    private BorderPane mainPanel;
 
+    @FXML
+    private ListView<Group> groupListView;
+
+    @FXML
+    private TextField groupNameField;
 
     public void setContactController(ContactController contactController) {
         throw new UnsupportedOperationException("Remove this line and implement your code here!");
@@ -18,7 +31,26 @@ public class GroupController {
 
     @FXML
     void initialize() {
-        throw new UnsupportedOperationException("Remove this line and implement your code here!");
+        groupListView.setItems(addGroupData());
+    }
+
+    public String selectedGroup() {
+        Group selectedGroup = groupListView.getSelectionModel().getSelectedItem();
+        return selectedGroup.getName();
+    }
+
+    @FXML
+    public void fillGroupName() {
+        if (selectedGroup() != null) {
+            groupNameField.setText(selectedGroup());
+        }
+    }
+
+    @FXML
+    public void closeWindow() {
+        Stage stage = (Stage)mainPanel.getScene().getWindow();
+        stage.close();
+
     }
 
     //search action
@@ -47,7 +79,9 @@ public class GroupController {
     }
 
     //output all groups to table view
-    public void showGroup(ObservableList<Group> groups) {
-
-    }
+//    @FXML
+//    public void showGroup(ObservableList<Group> groups) {
+//
+//
+//    }
 }

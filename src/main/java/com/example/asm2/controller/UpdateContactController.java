@@ -43,12 +43,9 @@ public class UpdateContactController {
         groupCombo.setItems(groups);
     }
 
-
     public void  setContactController(ContactController contactController) {
         throw new UnsupportedOperationException("Remove this line and implement your code here!");
     }
-
-
 
     public  void setContacts(List<Contact> contacts) {
         throw new UnsupportedOperationException("Remove this line and implement your code here!");
@@ -58,8 +55,6 @@ public class UpdateContactController {
         throw new UnsupportedOperationException("Remove this line and implement your code here!");
     }
 
-
-
     public void updateContact(Contact contact) {
         firstNameField.setText(contact.getFirstName());
         lastNameField.setText(contact.getLastName());
@@ -67,9 +62,5 @@ public class UpdateContactController {
         emailField.setText(contact.getEmail());
         birthdayPicker.setValue(contact.getDob());
         groupCombo.setValue(contact.getGroup());
-
     }
-
-
-
 }

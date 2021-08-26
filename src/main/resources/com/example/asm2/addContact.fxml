@@ -38,11 +38,7 @@
 
             <Label text="Group" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
             <ComboBox fx:id="groupCombo" GridPane.rowIndex="5" GridPane.columnIndex="1" prefWidth="150.0"/>
-
-            <HBox GridPane.rowIndex="6" GridPane.columnIndex="0" GridPane.rowSpan="2" spacing="30">
-                <Button text="Save" onAction="#saveContact"/>
-                <Button text="Close" onAction="#cancelButton_Click"/>
-            </HBox>
+            
         </GridPane>
     </content>
 </DialogPane>

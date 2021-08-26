@@ -10,7 +10,10 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.Priority?>
 <?import javafx.geometry.Insets?>
-<BorderPane fx:id="mainPanel" xmlns:fx="http://javafx.com/fxml">
+
+
+<BorderPane  fx:id="mainPanel" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.asm2.controller.GroupController">
     <padding>
         <Insets top="10" left="10" right="10" bottom="10"/>
     </padding>
@@ -26,10 +29,10 @@
             <padding>
                 <Insets top="10" left="10" right="10" bottom="10"/>
             </padding>
-            <ListView/>
+            <ListView fx:id="groupListView" onMouseClicked="#fillGroupName"/>
             <VBox spacing="10">
                 <Label text="Enter group name"/>
-                <TextField/>
+                <TextField fx:id="groupNameField"/>
                 <HBox spacing="10">
                     <Button text="Save"/>
                     <Button text="Update"/>
@@ -37,7 +40,7 @@
                 </HBox>
                 <StackPane alignment="BOTTOM_RIGHT">
                     <VBox.vgrow><Priority fx:value="ALWAYS"/></VBox.vgrow>
-                    <Button text="Close"/>
+                    <Button text="Close" onAction="#closeWindow"/>
                 </StackPane>
             </VBox>
         </HBox>

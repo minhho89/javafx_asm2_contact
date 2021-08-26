@@ -8,8 +8,12 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -153,5 +157,21 @@ public class ContactController {
         }
     }
 
+    @FXML
+    public void openGroup() {
+        Parent root;
+        try {
+            root = FXMLLoader.load(Main.class.getResource("group.fxml"));
+            Stage stage = new Stage();
+            stage.setTitle("Groups Manager");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setAlwaysOnTop(true);
+            stage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+    }
 
 }

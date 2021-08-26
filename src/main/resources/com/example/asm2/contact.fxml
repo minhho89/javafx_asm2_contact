@@ -97,7 +97,7 @@
             <Button fx:id="btnAdd" text="Add" onAction="#showAddNewContactDialog"/>
             <StackPane alignment="CENTER_RIGHT">
                 <HBox.hgrow><Priority fx:value="ALWAYS"/></HBox.hgrow>
-                <Button fx:id="btnGroup" text="Manage groups"/>
+                <Button fx:id="btnGroup" text="Manage groups" onAction="#openGroup"/>
             </StackPane>
         </HBox>
     </bottom>
