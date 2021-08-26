@@ -12,8 +12,12 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+
+import static com.example.asm2.util.DummyData.addContactData;
+import static com.example.asm2.util.DummyData.addGroupData;
 
 
 public class ContactController {
@@ -62,6 +66,7 @@ public class ContactController {
     public void showAddNewContactDialog() {
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.initOwner(mainPanel.getScene().getWindow());
+        dialog.setTitle("Add new contact");
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(Main.class.getResource("addContact.fxml"));
         try {
@@ -77,15 +82,50 @@ public class ContactController {
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
 
         Optional<ButtonType> result = dialog.showAndWait();
-        if(result.isPresent() && result.get() == ButtonType.OK) {
-            // Handle OK
+        if(result.isPresent() && result.get() == saveButton) {
+            // Handle Save
         }
     }
 
     //update a contact
-    public  void updateContact()throws Exception {
-        throw new UnsupportedOperationException("Remove this line and implement your code here!");
+    @FXML
+    public void showUpdateContactDialog() {
+        // get selected contact
+        Contact selectedContact = contactsTable.getSelectionModel().getSelectedItem();
+        if(selectedContact == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("No contact selected!");
+            alert.setHeaderText(null);
+            alert.setContentText("Please select the contact you want to update");
+            alert.showAndWait();
+            return;
+        }
+
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.initOwner(mainPanel.getScene().getWindow());
+        dialog.setTitle("Update a contact");
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(Main.class.getResource("updateContact.fxml"));
+        try {
+            dialog.getDialogPane().setContent(fxmlLoader.load());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+        ButtonType saveButton = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().add(saveButton);
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
+
+        UpdateContactController controller = fxmlLoader.getController();
+        controller.updateContact(selectedContact);
+
+        Optional<ButtonType> result = dialog.showAndWait();
+        if(result.isPresent() && result.get() == saveButton) {
+            // Handle Save
+        }
+
     }
+
     //delete a selected contact
     @FXML
     public void deleteContact() {
@@ -113,33 +153,5 @@ public class ContactController {
         }
     }
 
-    private ObservableList<Contact> addContactData() {
-        Contact john = new Contact("John", "Snow", "84987234123", "john@gmail.com", "12-31-1987", "Family");
-        Contact adam = new Contact("Adam", "Smith", "84980720100", "adam.smith@gmail.com", "1900-07-22", "Friend");
-        Contact jean = new Contact("Jean", "Tonogbanua", "85231678987", "jean@yahoo.com", "9-9-1993", "Family");
-        Contact an = new Contact("An", "Ha", "84123098345", "AnHa@gmail.com", "0189-03-02", "Friend");
-        Contact an2 = new Contact("An", "Ha", "84123098345", "AnHa@gmail.com", "0017-08-31", "Friend");
 
-        ObservableList<Contact> contacts = FXCollections.observableArrayList();
-        contacts.add(john);
-        contacts.add(adam);
-        contacts.add(jean);
-        contacts.add(an);
-        contacts.add(an2);
-
-        return contacts;
-    }
-
-    private ObservableList<Group> addGroupData() {
-        Group family = new Group("Family");
-        Group friend = new Group("Friend");
-        Group colleagues = new Group("Colleagues");
-
-        ObservableList<Group> groupList = FXCollections.observableArrayList();
-        groupList.add(family);
-        groupList.add(friend);
-        groupList.add(colleagues);
-
-        return groupList;
-    }
 }

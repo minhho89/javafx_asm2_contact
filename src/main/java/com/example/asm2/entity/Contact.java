@@ -1,16 +1,20 @@
 package com.example.asm2.entity;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 
 public class Contact {
 
     private String firstName, lastName;
     private String phone, email;
-    private String dob;
-    private String group;
+    private LocalDate dob;
+    private Group group;
 
-    public Contact(String fName, String lName, String phone, String email, String dob, String group) {
+    public Contact() {
+    }
+
+    public Contact(String fName, String lName, String phone, String email, LocalDate dob, Group group) {
         this.dob = dob;
         this.email = email;
         this.firstName = fName;
@@ -23,15 +27,13 @@ public class Contact {
         return email;
     }
 
-    public String getDob() {
-        return dob;
-    }
+
 
     public String getFirstName() {
         return firstName;
     }
 
-    public String getGroup() {
+    public Group getGroup() {
         return group;
     }
 
@@ -43,7 +45,11 @@ public class Contact {
         return phone;
     }
 
-    public void setDob(String dob) {
+    public LocalDate getDob() {
+        return dob;
+    }
+
+    public void setDob(LocalDate dob) {
         this.dob = dob;
     }
 
@@ -55,7 +61,7 @@ public class Contact {
         this.firstName= fName;
     }
 
-    public void setGroup(String group) {
+    public void setGroup(Group group) {
         this.group = group;
     }
 

@@ -93,7 +93,7 @@
                 <Insets top="30" bottom="20"/>
             </padding>
             <Button fx:id="btnDelete" text="Delete" onAction="#deleteContact"/>
-            <Button fx:id="btnUpdate" text="Update"/>
+            <Button fx:id="btnUpdate" text="Update" onAction="#showUpdateContactDialog"/>
             <Button fx:id="btnAdd" text="Add" onAction="#showAddNewContactDialog"/>
             <StackPane alignment="CENTER_RIGHT">
                 <HBox.hgrow><Priority fx:value="ALWAYS"/></HBox.hgrow>

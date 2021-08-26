@@ -1,6 +1,7 @@
 package com.example.asm2.controller;
 
 import com.example.asm2.entity.Group;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
@@ -46,7 +47,7 @@ public class GroupController {
     }
 
     //output all groups to table view
-    public  void showGroup(List<Group> groups) {
-        throw new UnsupportedOperationException("Remove this line and implement your code here!");
+    public void showGroup(ObservableList<Group> groups) {
+
     }
 }

@@ -7,29 +7,30 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.ComboBox?>
 <DialogPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml">
+            xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.asm2.controller.UpdateContactController"
+            prefHeight="22.0" prefWidth="400.0">
     <headerText>
-        Add a new Contact
+        Update a contact
     </headerText>
     <content>
         <GridPane vgap="10" hgap="10">
             <Label text="First Name" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-            <TextField fx:id="firstNameField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+            <TextField fx:id="firstNameField" GridPane.rowIndex="0" GridPane.columnIndex="1" prefWidth="150.0"/>
 
             <Label text="Last Name" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-            <TextField fx:id="lastNameField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+            <TextField fx:id="lastNameField" GridPane.rowIndex="1" GridPane.columnIndex="1" prefWidth="150.0"/>
 
             <Label text="Phone" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-            <TextField fx:id="phoneField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+            <TextField fx:id="phoneField" GridPane.rowIndex="2" GridPane.columnIndex="1" prefWidth="150.0"/>
 
             <Label text="Email" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-            <TextField fx:id="emailField" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+            <TextField fx:id="emailField" GridPane.rowIndex="3" GridPane.columnIndex="1" prefWidth="150.0"/>
 
             <Label text="Birthday" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-            <DatePicker fx:id="birthdayPicker" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+            <DatePicker fx:id="birthdayPicker" GridPane.rowIndex="4" GridPane.columnIndex="1" prefWidth="150.0"/>
 
             <Label text="Group" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
-            <ComboBox fx:id="groupCombo" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+            <ComboBox fx:id="groupCombo" GridPane.rowIndex="5" GridPane.columnIndex="1" prefWidth="150.0"/>
 
         </GridPane>
     </content>
