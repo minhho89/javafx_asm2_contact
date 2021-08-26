@@ -1,7 +1,6 @@
 package com.example.asm2.controller;
 
 import com.example.asm2.entity.Contact;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
 import java.util.List;
@@ -19,14 +18,20 @@ public class AddContactController {
     }
 
     @FXML
-    void initialize()throws  Exception {
-        throw new UnsupportedOperationException("Remove this line and implement your code here!");
+    void initialize() {
+
     }
 
-    public  void saveContact() throws Exception {
-        throw new UnsupportedOperationException("Remove this line and implement your code here!");
+    @FXML
+    public void saveContact() {
+
     }
-    public  void saveContact(ActionEvent evt)throws  Exception {
-        throw new UnsupportedOperationException("Remove this line and implement your code here!");
+//    public  void saveContact(ActionEvent evt)throws  Exception {
+//        throw new UnsupportedOperationException("Remove this line and implement your code here!");
+//    }
+
+    @FXML
+    public void cancelButton_Click() {
+
     }
 }

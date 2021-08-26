@@ -1,13 +1,17 @@
 package com.example.asm2.controller;
 
+import com.example.asm2.Main;
 import com.example.asm2.entity.Contact;
 import com.example.asm2.entity.Group;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +20,9 @@ public class ContactController {
 
     ObservableList<Contact> contacts = FXCollections.observableArrayList();
     ObservableList<Group> groups = FXCollections.observableArrayList();
+
+    @FXML
+    private BorderPane mainPanel;
 
     @FXML
     private TableView<Contact> contactsTable;
@@ -51,11 +58,36 @@ public class ContactController {
 
     }
 
+    @FXML
+    public void showAddNewContactDialog() {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.initOwner(mainPanel.getScene().getWindow());
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(Main.class.getResource("addContact.fxml"));
+        try {
+            dialog.getDialogPane().setContent(fxmlLoader.load());
+        } catch (IOException e) {
+            System.out.println("Couldn't load the dialog");
+            e.printStackTrace();
+            return;
+        }
+
+        ButtonType saveButton = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().add(saveButton);
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
+
+        Optional<ButtonType> result = dialog.showAndWait();
+        if(result.isPresent() && result.get() == ButtonType.OK) {
+            // Handle OK
+        }
+    }
+
     //update a contact
     public  void updateContact()throws Exception {
         throw new UnsupportedOperationException("Remove this line and implement your code here!");
     }
     //delete a selected contact
+    @FXML
     public void deleteContact() {
         Contact selectedContact = contactsTable.getSelectionModel().getSelectedItem();
         if (selectedContact == null) {
@@ -110,6 +142,4 @@ public class ContactController {
 
         return groupList;
     }
-
-
 }

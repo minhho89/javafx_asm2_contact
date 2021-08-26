@@ -12,7 +12,8 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.Priority?>
-<BorderPane fx:id="mainPanel" xmlns:fx="http://javafx.com/fxml"  fx:controller="com.example.asm2.controller.ContactController">
+<BorderPane fx:id="mainPanel" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.asm2.controller.ContactController">
     <padding>
         <Insets top="10" left="10" right="10" bottom="10"/>
     </padding>
@@ -93,7 +94,7 @@
             </padding>
             <Button fx:id="btnDelete" text="Delete" onAction="#deleteContact"/>
             <Button fx:id="btnUpdate" text="Update"/>
-            <Button fx:id="btnAdd" text="Add"/>
+            <Button fx:id="btnAdd" text="Add" onAction="#showAddNewContactDialog"/>
             <StackPane alignment="CENTER_RIGHT">
                 <HBox.hgrow><Priority fx:value="ALWAYS"/></HBox.hgrow>
                 <Button fx:id="btnGroup" text="Manage groups"/>

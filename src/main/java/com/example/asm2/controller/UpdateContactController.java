@@ -25,8 +25,8 @@ public class UpdateContactController {
 
 
     @FXML
-    void initialize()throws  Exception {
-        throw new UnsupportedOperationException("Remove this line and implement your code here!");
+    void initialize() {
+
     }
 
     public  void updateContact(ActionEvent evt)throws  Exception {
@@ -34,8 +34,6 @@ public class UpdateContactController {
 
     }
 
-    public  void saveContact() throws Exception {
-        throw new UnsupportedOperationException("Remove this line and implement your code here!");
-    }
+
 
 }
