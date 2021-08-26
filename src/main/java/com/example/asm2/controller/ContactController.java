@@ -6,10 +6,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public class ContactController {
@@ -56,8 +56,29 @@ public class ContactController {
         throw new UnsupportedOperationException("Remove this line and implement your code here!");
     }
     //delete a selected contact
-    public  void deleteContact()throws  Exception {
-        throw new UnsupportedOperationException("Remove this line and implement your code here!");
+    public void deleteContact() {
+        Contact selectedContact = contactsTable.getSelectionModel().getSelectedItem();
+        if (selectedContact == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Confirmation");
+            alert.setHeaderText("No Contact Selected");
+            alert.setContentText("Please select the contact you want to delete");
+            Optional<ButtonType> result = alert.showAndWait();
+            return;
+        }
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText("Confirmation");
+        alert.setContentText("Do you want to delete selected contact");
+        alert.getButtonTypes().setAll(ButtonType.OK, ButtonType.CANCEL);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            // Delete contact
+            return;
+        } else if (result.isPresent() && result.get() == ButtonType.CANCEL) {
+            return;
+        }
     }
 
     private ObservableList<Contact> addContactData() {
