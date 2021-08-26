@@ -10,6 +10,8 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.Priority?>
 <BorderPane fx:id="mainPanel" xmlns:fx="http://javafx.com/fxml">
     <padding>
         <Insets top="10" left="10" right="10" bottom="10"/>
@@ -23,8 +25,10 @@
             <ComboBox prefWidth="150"/>
             <Label text="Enter contact information"/>
             <TextField/>
-            <Button text="Search">
-            </Button>
+            <StackPane alignment="CENTER_RIGHT">
+                <HBox.hgrow><Priority fx:value="ALWAYS"/></HBox.hgrow>
+                <Button text="Search"/>
+            </StackPane>
         </HBox>
     </top>
     <center>
@@ -86,11 +90,13 @@
             <padding>
                 <Insets top="30" bottom="20"/>
             </padding>
-
             <Button text="Delete"/>
             <Button text="Update"/>
             <Button text="Add"/>
-            <Button text="Manage groups"/>
+            <StackPane alignment="CENTER_RIGHT">
+                <HBox.hgrow><Priority fx:value="ALWAYS"/></HBox.hgrow>
+                <Button text="Manage groups"/>
+            </StackPane>
         </HBox>
     </bottom>
 </BorderPane>
