@@ -16,7 +16,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,20 +47,23 @@ public class ContactController {
     }
 
     //output all contact to tblContact
-    public  void showContact(List<Contact> c) {
+    public void showContact(List<Contact> c) {
         throw new UnsupportedOperationException("Remove this line and implement your code here!");
     }
+
     //output all groups to dropdownlist
-    public  void showGroup(List<Group> g) {
+    public void showGroup(List<Group> g) {
         throw new UnsupportedOperationException("Remove this line and implement your code here!");
     }
+
     //do corresponding actions for search, delete, update and add contact
-    public void searchContact(ActionEvent evt) throws Exception{
+    public void searchContact(ActionEvent evt) throws Exception {
         throw new UnsupportedOperationException("Remove this line and implement your code here!");
 
     }
+
     //manage the groups
-    public void groupPanel() throws Exception{
+    public void groupPanel() throws Exception {
         throw new UnsupportedOperationException("Remove this line and implement your code here!");
 
     }
@@ -86,7 +88,7 @@ public class ContactController {
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
 
         Optional<ButtonType> result = dialog.showAndWait();
-        if(result.isPresent() && result.get() == saveButton) {
+        if (result.isPresent() && result.get() == saveButton) {
             // Handle Save
         }
     }
@@ -96,7 +98,7 @@ public class ContactController {
     public void showUpdateContactDialog() {
         // get selected contact
         Contact selectedContact = contactsTable.getSelectionModel().getSelectedItem();
-        if(selectedContact == null) {
+        if (selectedContact == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("No contact selected!");
             alert.setHeaderText(null);
@@ -124,7 +126,7 @@ public class ContactController {
         controller.updateContact(selectedContact);
 
         Optional<ButtonType> result = dialog.showAndWait();
-        if(result.isPresent() && result.get() == saveButton) {
+        if (result.isPresent() && result.get() == saveButton) {
             // Handle Save
         }
 

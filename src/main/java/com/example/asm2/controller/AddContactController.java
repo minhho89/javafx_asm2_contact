@@ -1,33 +1,28 @@
 package com.example.asm2.controller;
 
-import com.example.asm2.entity.Contact;
 import com.example.asm2.entity.Group;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 
-import java.util.List;
-
-
 import static com.example.asm2.util.DummyData.addGroupData;
 
 public class AddContactController {
 
-    public void  setAddContactController(ContactController contactController) {
-        throw new UnsupportedOperationException("Remove this line and implement your code here!");
-    }
+    ObservableList<Group> groups = FXCollections.observableArrayList();
 
 //    private List<Contact> contacts;
 
 //    public  void setContacts(List<Contact> contacts) {
 //        this.contacts = contacts;
 //    }
-
-    ObservableList<Group> groups = FXCollections.observableArrayList();
-
     @FXML
     private ComboBox<Group> groupCombo;
+
+    public void setAddContactController(ContactController contactController) {
+        throw new UnsupportedOperationException("Remove this line and implement your code here!");
+    }
 
     @FXML
     void initialize() {

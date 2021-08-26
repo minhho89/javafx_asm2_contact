@@ -1,15 +1,12 @@
 package com.example.asm2.controller;
 
 import com.example.asm2.entity.Group;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-
-import java.util.List;
 
 import static com.example.asm2.util.DummyData.addGroupData;
 
@@ -48,33 +45,33 @@ public class GroupController {
 
     @FXML
     public void closeWindow() {
-        Stage stage = (Stage)mainPanel.getScene().getWindow();
+        Stage stage = (Stage) mainPanel.getScene().getWindow();
         stage.close();
 
     }
 
     //search action
-    public  void searchAction() {
+    public void searchAction() {
         throw new UnsupportedOperationException("Remove this line and implement your code here!");
     }
 
     //add new group action
-    public  void addAction()throws Exception {
+    public void addAction() throws Exception {
         throw new UnsupportedOperationException("Remove this line and implement your code here!");
     }
 
     //update group name
-    public  void updateAction() {
+    public void updateAction() {
         throw new UnsupportedOperationException("Remove this line and implement your code here!");
     }
 
     //delete a group, delete failed if there are some contact is in deleted one
-    public  void deleteAction()throws Exception {
+    public void deleteAction() throws Exception {
         throw new UnsupportedOperationException("Remove this line and implement your code here!");
     }
 
     //operations on each button on window
-    public  void groupAction(ActionEvent evt)throws Exception {
+    public void groupAction(ActionEvent evt) throws Exception {
         throw new UnsupportedOperationException("Remove this line and implement your code here!");
     }
 

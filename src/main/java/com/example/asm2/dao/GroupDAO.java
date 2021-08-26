@@ -12,7 +12,7 @@ public class GroupDAO {
     }
 
     //save all groups from a given list to a text file
-    public  void saveGroupToFile(List<Group> g, String fname) throws Exception {
+    public void saveGroupToFile(List<Group> g, String fname) throws Exception {
         throw new UnsupportedOperationException("Remove this line and implement your code here!");
     }
 
@@ -21,18 +21,19 @@ public class GroupDAO {
     public int indexOf(List<Group> list, Group g) {
         throw new UnsupportedOperationException("Remove this line and implement your code here!");
     }
+
     //save a group to a current list
-    public  void saveGroupToList(List<Group> list, Group g) {
+    public void saveGroupToList(List<Group> list, Group g) {
         throw new UnsupportedOperationException("Remove this line and implement your code here!");
     }
 
     //return a list of Contact who information matched given search word
-    public  List<Group> search(List<Group> c, String search) {
+    public List<Group> search(List<Group> c, String search) {
         throw new UnsupportedOperationException("Remove this line and implement your code here!");
     }
 
     //update a group in groups by a newGroup
-    public  boolean updateGroup(List<Group> groups, int i, String oldGroup, String newGroup) {
+    public boolean updateGroup(List<Group> groups, int i, String oldGroup, String newGroup) {
         throw new UnsupportedOperationException("Remove this line and implement your code here!");
     }
 }

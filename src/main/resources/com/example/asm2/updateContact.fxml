@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.DialogPane?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.ComboBox?>
-<DialogPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.asm2.controller.UpdateContactController"
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<DialogPane xmlns:fx="http://javafx.com/fxml"
+            xmlns="http://javafx.com/javafx" fx:controller="com.example.asm2.controller.UpdateContactController"
             prefHeight="22.0" prefWidth="400.0">
     <headerText>
         Update a contact
