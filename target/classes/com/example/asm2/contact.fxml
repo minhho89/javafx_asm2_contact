@@ -12,7 +12,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.Priority?>
-<BorderPane fx:id="mainPanel" xmlns:fx="http://javafx.com/fxml">
+<BorderPane fx:id="mainPanel" xmlns:fx="http://javafx.com/fxml"  fx:controller="com.example.asm2.controller.ContactController">
     <padding>
         <Insets top="10" left="10" right="10" bottom="10"/>
     </padding>
@@ -21,18 +21,19 @@
             <padding>
                 <Insets bottom="10"/>
             </padding>
+
             <Label text="Filter by group"/>
-            <ComboBox prefWidth="150"/>
+            <ComboBox fx:id="cbGroup" prefWidth="150.0"/>
             <Label text="Enter contact information"/>
-            <TextField/>
+            <TextField fx:id="search" prefHeight="27.0" prefWidth="168.0"/>
             <StackPane alignment="CENTER_RIGHT">
                 <HBox.hgrow><Priority fx:value="ALWAYS"/></HBox.hgrow>
-                <Button text="Search"/>
+                <Button fx:id="btnSearch" text="Search" onAction="#searchContact"/>
             </StackPane>
         </HBox>
     </top>
     <center>
-        <TableView>
+        <TableView fx:id="contactsTable" prefHeight="353.0" prefWidth="662.0">
             <columnResizePolicy>
                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
             </columnResizePolicy>
@@ -71,7 +72,7 @@
             <columns>
                 <TableColumn text="Birth date">
                     <cellValueFactory>
-                        <PropertyValueFactory property="birthdate"/>
+                        <PropertyValueFactory property="dob"/>
                     </cellValueFactory>
                 </TableColumn>
             </columns>
@@ -79,7 +80,7 @@
             <columns>
                 <TableColumn text="Group Name">
                     <cellValueFactory>
-                        <PropertyValueFactory property="groupName"/>
+                        <PropertyValueFactory property="group"/>
                     </cellValueFactory>
                 </TableColumn>
             </columns>
@@ -90,12 +91,12 @@
             <padding>
                 <Insets top="30" bottom="20"/>
             </padding>
-            <Button text="Delete"/>
-            <Button text="Update"/>
-            <Button text="Add"/>
+            <Button fx:id="btnDelete" text="Delete"/>
+            <Button fx:id="btnUpdate" text="Update"/>
+            <Button fx:id="btnAdd" text="Add"/>
             <StackPane alignment="CENTER_RIGHT">
                 <HBox.hgrow><Priority fx:value="ALWAYS"/></HBox.hgrow>
-                <Button text="Manage groups"/>
+                <Button fx:id="btnGroup" text="Manage groups"/>
             </StackPane>
         </HBox>
     </bottom>
