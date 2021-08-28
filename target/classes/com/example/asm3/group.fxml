@@ -5,15 +5,15 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:id="mainPanel"
-            fx:controller="com.example.asm2.controller.GroupController">
+            fx:controller="com.example.asm3.controller.GroupController">
     <padding>
         <Insets top="10" left="10" right="10" bottom="10"/>
     </padding>
     <top>
         <HBox spacing="10">
             <Label text="Enter group name"/>
-            <TextField prefWidth="200"/>
-            <Button text="Search"/>
+            <TextField fx:id="searchField" prefWidth="200"/>
+            <Button text="Search" onAction="#searchAction"/>
         </HBox>
     </top>
     <center>
@@ -26,7 +26,7 @@
                 <Label text="Enter group name"/>
                 <TextField fx:id="groupNameField"/>
                 <HBox spacing="10">
-                    <Button text="Save"/>
+                    <Button text="Save" onAction="#addAction"/>
                     <Button text="Update"/>
                     <Button text="Delete"/>
                 </HBox>
