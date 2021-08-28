@@ -31,12 +31,9 @@ public class GroupController {
     @FXML
     private TextField groupNameField;
 
-    public void setContactController(ContactController contactController) {
-        throw new UnsupportedOperationException("Remove this line and implement your code here!");
-    }
 
-    private static ObservableList<Group> groups;
-    private static ObservableList<Contact> contacts;
+    public static ObservableList<Group> groups;
+    static ObservableList<Contact> contacts;
 
     static {
         try {
@@ -179,6 +176,16 @@ public class GroupController {
         return false;
     }
 
+    public static int findIndexByGroupName(String groupName) {
+        int i = 0;
+        for (Group group : groups) {
+            if (groupName.equalsIgnoreCase(group.getName())) {
+                return i;
+            }
+            i++;
+        }
+        return -1;
+    }
     //operations on each button on window
     public void groupAction(ActionEvent evt) throws Exception {
         throw new UnsupportedOperationException("Remove this line and implement your code here!");

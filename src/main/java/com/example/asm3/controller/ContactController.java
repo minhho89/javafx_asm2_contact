@@ -1,6 +1,7 @@
 package com.example.asm3.controller;
 
 import com.example.asm3.Main;
+import com.example.asm3.dao.ContactDAO;
 import com.example.asm3.entity.Contact;
 import com.example.asm3.entity.Group;
 import javafx.collections.FXCollections;
@@ -21,8 +22,7 @@ import java.util.Optional;
 
 public class ContactController {
 
-    ObservableList<Contact> contacts = FXCollections.observableArrayList();
-    ObservableList<Group> groups = FXCollections.observableArrayList();
+    ObservableList<Group> groups = GroupController.groups;
 
     @FXML
     private BorderPane mainPanel;
@@ -33,33 +33,21 @@ public class ContactController {
     @FXML
     private ComboBox<Group> cbGroup;
 
+    private static ObservableList<Contact> contacts;
+
+    static {
+        try {
+            contacts = ContactDAO.loadContacts();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @FXML
     void initialize() {
-
-
+        contactsTable.setItems(contacts);
     }
 
-    //output all contact to tblContact
-    public void showContact(List<Contact> c) {
-        throw new UnsupportedOperationException("Remove this line and implement your code here!");
-    }
-
-    //output all groups to dropdownlist
-    public void showGroup(List<Group> g) {
-        throw new UnsupportedOperationException("Remove this line and implement your code here!");
-    }
-
-    //do corresponding actions for search, delete, update and add contact
-    public void searchContact(ActionEvent evt) throws Exception {
-        throw new UnsupportedOperationException("Remove this line and implement your code here!");
-
-    }
-
-    //manage the groups
-    public void groupPanel() throws Exception {
-        throw new UnsupportedOperationException("Remove this line and implement your code here!");
-
-    }
 
     @FXML
     public void showAddNewContactDialog() {

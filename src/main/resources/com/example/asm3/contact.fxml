@@ -23,7 +23,7 @@
                 <HBox.hgrow>
                     <Priority fx:value="ALWAYS"/>
                 </HBox.hgrow>
-                <Button fx:id="btnSearch" text="Search" onAction="#searchContact"/>
+                <Button fx:id="btnSearch" text="Search" />
             </StackPane>
         </HBox>
     </top>

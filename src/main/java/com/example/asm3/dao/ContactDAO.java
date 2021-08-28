@@ -1,5 +1,6 @@
 package com.example.asm3.dao;
 
+import com.example.asm3.controller.GroupController;
 import com.example.asm3.entity.Contact;
 import com.example.asm3.entity.Group;
 import javafx.collections.FXCollections;
@@ -9,62 +10,45 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Scanner;
 
 
 public class ContactDAO {
 
     private static final File FILE = new File("./src/main/java/com/example/asm3/data/contacts.txt");
-    private static final String PATH = FILE.getAbsolutePath();
 
     static ObservableList<Contact> contacts;
+    static ObservableList<Group> groups = GroupController.groups;
 
-    //load all Contacts from the file Contact in to a list
-    public List<Contact> loadContact(String fname) throws Exception {
-        throw new UnsupportedOperationException("Remove this line and implement your code here!");
+    public static ObservableList<Contact> loadContacts() throws IOException {
+        contacts = FXCollections.observableArrayList();
+        Scanner sc = null;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        Contact contact = new Contact();
+        try {
+            sc = new Scanner(FILE);
+            sc.useDelimiter(",,,");
+            while(sc.hasNextLine()){
+                contact.setFirstName(sc.next());
+                contact.setLastName(sc.next());
+                contact.setPhone(sc.next());
+                contact.setEmail(sc.next());
+                contact.setDob(LocalDate.parse(sc.next(), formatter));
+                // find index group
+                int index = GroupController.findIndexByGroupName(sc.next());
+                if (index != -1) {
+                    contact.setGroup(groups.get(index));
+                } else {
+                    contact.setGroup(null);
+                }
+                contacts.add(contact);
+            }
+        } finally {
+          sc.close();
+        }
+        return contacts;
     }
-
-    //save all Contacts from a given list to a text file
-    public void saveToFile(List<Contact> g, String fname) throws Exception {
-        throw new UnsupportedOperationException("Remove this line and implement your code here!");
-    }
-
-    //return the first position of a given contact g in the list
-    //otherwise return -1
-    public int indexOf(List<Contact> list, Contact g) {
-        throw new UnsupportedOperationException("Remove this line and implement your code here!");
-    }
-
-    //save a Contact to a current list
-    public void saveToList(List<Contact> list, Contact g) {
-        list.add(g);
-    }
-
-    //update information of a contact c at position i in the list
-    public void updateContact(List<Contact> list, Contact c, int i) {
-        throw new UnsupportedOperationException("Remove this line and implement your code here!");
-    }
-
-    //return a list of Contact who information matched given search word
-    public List<Contact> search(List<Contact> c, String group, String search) {
-        throw new UnsupportedOperationException("Remove this line and implement your code here!");
-    }
-
-    //return a list of Contact who is in a given group
-    public List<Contact> contactByGroup(List<Contact> c, String group) {
-        throw new UnsupportedOperationException("Remove this line and implement your code here!");
-    }
-
-//    public static ObservableList<Group> loadGroup() throws IOException {
-//        contacts = FXCollections.observableArrayList();
-//
-//        BufferedReader bw = null;
-//        try {
-//            bw = new BufferedReader(new FileReader(PATH));
-//
-//
-//        } finally {
-//          bw.close();
-//        }
-//    }
 }
