@@ -27,8 +27,8 @@
                 <TextField fx:id="groupNameField"/>
                 <HBox spacing="10">
                     <Button text="Save" onAction="#addAction"/>
-                    <Button text="Update"/>
-                    <Button text="Delete"/>
+                    <Button text="Update" onAction="#updateAction"/>
+                    <Button text="Delete" onAction="#deleteAction"/>
                 </HBox>
                 <StackPane alignment="BOTTOM_RIGHT">
                     <VBox.vgrow>
