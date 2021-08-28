@@ -12,6 +12,14 @@ public class Contact {
     public Contact() {
     }
 
+    public Contact(String firstName, String lastName, String phone, String email, LocalDate dob) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+        this.email = email;
+        this.dob = dob;
+    }
+
     public Contact(String fName, String lName, String phone, String email, LocalDate dob, Group group) {
         this.dob = dob;
         this.email = email;
@@ -67,6 +75,11 @@ public class Contact {
 
     public void setDob(LocalDate dob) {
         this.dob = dob;
+    }
+
+    // Remove group
+    public void removeGroup() {
+        this.group = null;
     }
 
     @Override

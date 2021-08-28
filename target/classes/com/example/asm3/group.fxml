@@ -27,7 +27,7 @@
                 <TextField fx:id="groupNameField"/>
                 <HBox spacing="10">
                     <Button text="Save" onAction="#addAction"/>
-                    <Button text="Update"/>
+                    <Button text="Update" onAction="#updateAction"/>
                     <Button text="Delete"/>
                 </HBox>
                 <StackPane alignment="BOTTOM_RIGHT">

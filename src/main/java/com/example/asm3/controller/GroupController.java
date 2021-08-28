@@ -52,15 +52,15 @@ public class GroupController {
         }
     }
 
-    public String selectedGroup() {
+    public Group selectedGroup() {
         Group selectedGroup = groupListView.getSelectionModel().getSelectedItem();
-        return selectedGroup.getName();
+        return selectedGroup;
     }
 
     @FXML
     public void fillGroupName() {
         if (selectedGroup() != null) {
-            groupNameField.setText(selectedGroup());
+            groupNameField.setText(selectedGroup().getName());
         }
     }
 
@@ -112,9 +112,30 @@ public class GroupController {
     // Update group name
     public void updateAction() {
         if (groupNameField.getText() != null || groupNameField.getText().trim() != "") {
-
+            Group selectedGroup = selectedGroup();
+            if (selectedGroup != null) {
+                String oldName = groups.get(groups.indexOf(selectedGroup)).getName();
+                String newName = groupNameField.getText();
+                if (!oldName.equalsIgnoreCase(newName)) {
+                    // old name is different from new name
+                    groups.get(groups.indexOf(selectedGroup)).setName(newName);
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Information");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Group \"" + oldName + "\" has been renamed to \"" + newName + "\" successfully.");
+                    alert.showAndWait();
+                } else {
+                    // old friend is same with new name
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setContentText("Your new group name is the same with your old group name");
+                    alert.showAndWait();
+                }
+            }
         }
     }
+
+
 
     //delete a group, delete failed if there are some contact is in deleted one
     public void deleteAction() throws Exception {
