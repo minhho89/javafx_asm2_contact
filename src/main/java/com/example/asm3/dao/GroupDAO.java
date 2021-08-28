@@ -30,7 +30,6 @@ public class GroupDAO {
             while((groupName = bw.readLine()) != null) {
                 groups.add(new Group(groupName));
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -39,8 +38,6 @@ public class GroupDAO {
         }
 
     }
-
-
 
     //save all groups from a given list to a text file
     public static void saveGroupToFile()  {

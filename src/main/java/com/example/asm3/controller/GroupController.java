@@ -140,13 +140,11 @@ public class GroupController {
         }
     }
 
-    
     //delete a group, delete failed if there are some contact is in deleted one
     @FXML
     public void deleteAction()  {
         Group selectedItem = selectedGroup();
-        System.out.println(selectedItem.getName());
-        if(!checkGroupHasContacts(selectedItem)) {
+        if(!belongToGroup(selectedItem)) {
             // delete
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Confirmation");
@@ -171,9 +169,12 @@ public class GroupController {
         }
     }
 
-    private boolean checkGroupHasContacts(Group CheckingGroup) {
-        for (Contact contact : contacts) {
-            if (contact.getGroup().equals(CheckingGroup)) return true;
+
+    private boolean belongToGroup(Group CheckingGroup) {
+        if (contacts != null) {
+            for (Contact contact : contacts) {
+                if (contact.getGroup().equals(CheckingGroup)) return true;
+            }
         }
         return false;
     }

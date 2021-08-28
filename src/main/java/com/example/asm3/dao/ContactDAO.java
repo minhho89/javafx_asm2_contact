@@ -1,11 +1,23 @@
 package com.example.asm3.dao;
 
 import com.example.asm3.entity.Contact;
+import com.example.asm3.entity.Group;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.List;
 
 
 public class ContactDAO {
+
+    private static final File FILE = new File("./src/main/java/com/example/asm3/data/contacts.txt");
+    private static final String PATH = FILE.getAbsolutePath();
+
+    static ObservableList<Contact> contacts;
 
     //load all Contacts from the file Contact in to a list
     public List<Contact> loadContact(String fname) throws Exception {
@@ -42,4 +54,17 @@ public class ContactDAO {
     public List<Contact> contactByGroup(List<Contact> c, String group) {
         throw new UnsupportedOperationException("Remove this line and implement your code here!");
     }
+
+//    public static ObservableList<Group> loadGroup() throws IOException {
+//        contacts = FXCollections.observableArrayList();
+//
+//        BufferedReader bw = null;
+//        try {
+//            bw = new BufferedReader(new FileReader(PATH));
+//
+//
+//        } finally {
+//          bw.close();
+//        }
+//    }
 }
