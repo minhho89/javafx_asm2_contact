@@ -79,7 +79,7 @@ public class ContactController {
         btSave.addEventFilter(ActionEvent.ACTION, event -> {
             if (addController.areAllFieldsBlank()) {
                 event.consume();
-                addController.getFirstNameField().setText("LLLLL");
+                inValidHandle(addController);
             }
         });
 
@@ -129,7 +129,8 @@ public class ContactController {
     }
 
     private void inValidHandle(AddContactController addController) {
-        if (!addController.getFirstNameField().getText().isBlank())
+        if (addController.getFirstNameField().getText().isBlank())
+            System.out.println("empty");
             addController.getFirstNameField().setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");
     }
 
