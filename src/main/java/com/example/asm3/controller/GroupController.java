@@ -1,17 +1,20 @@
 package com.example.asm3.controller;
 
 import com.example.asm3.dao.GroupDAO;
+import com.example.asm3.entity.Contact;
 import com.example.asm3.entity.Group;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Optional;
 
 
 public class GroupController {
@@ -33,6 +36,7 @@ public class GroupController {
     }
 
     private static ObservableList<Group> groups;
+    private static ObservableList<Contact> contacts;
 
     static {
         try {
@@ -110,6 +114,7 @@ public class GroupController {
     }
 
     // Update group name
+    @FXML
     public void updateAction() {
         if (groupNameField.getText() != null || groupNameField.getText().trim() != "") {
             Group selectedGroup = selectedGroup();
@@ -125,7 +130,7 @@ public class GroupController {
                     alert.setContentText("Group \"" + oldName + "\" has been renamed to \"" + newName + "\" successfully.");
                     alert.showAndWait();
                 } else {
-                    // old friend is same with new name
+                    // old group name is same with new name
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Error");
                     alert.setContentText("Your new group name is the same with your old group name");
@@ -135,11 +140,42 @@ public class GroupController {
         }
     }
 
-
-
+    
     //delete a group, delete failed if there are some contact is in deleted one
-    public void deleteAction() throws Exception {
-        throw new UnsupportedOperationException("Remove this line and implement your code here!");
+    @FXML
+    public void deleteAction()  {
+        Group selectedItem = selectedGroup();
+        System.out.println(selectedItem.getName());
+        if(!checkGroupHasContacts(selectedItem)) {
+            // delete
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Confirmation");
+            alert.setHeaderText("Confirmation");
+            alert.setContentText("Do you want to delete selected group");
+            alert.getButtonTypes().setAll(ButtonType.OK, ButtonType.CANCEL);
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                groups.remove(selectedItem);
+                return;
+            } else if (result.isPresent() && result.get() == ButtonType.CANCEL) {
+                return;
+            }
+
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Failed to delete Group");
+            alert.setHeaderText("The Group has some contact(s) in it");
+            alert.setContentText("Consider remove selected group out of relevant contact(s) before deleting it");
+            alert.showAndWait();
+        }
+    }
+
+    private boolean checkGroupHasContacts(Group CheckingGroup) {
+        for (Contact contact : contacts) {
+            if (contact.getGroup().equals(CheckingGroup)) return true;
+        }
+        return false;
     }
 
     //operations on each button on window

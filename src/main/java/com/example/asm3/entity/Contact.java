@@ -77,10 +77,7 @@ public class Contact {
         this.dob = dob;
     }
 
-    // Remove group
-    public void removeGroup() {
-        this.group = null;
-    }
+
 
     @Override
     public String toString() {
