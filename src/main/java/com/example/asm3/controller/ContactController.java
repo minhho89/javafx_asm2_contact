@@ -46,6 +46,7 @@ public class ContactController {
     @FXML
     void initialize() {
         contactsTable.setItems(contacts);
+        cbGroup.setItems(groups);
     }
 
 
