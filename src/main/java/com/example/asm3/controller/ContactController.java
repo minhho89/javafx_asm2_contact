@@ -22,8 +22,6 @@ import java.util.Optional;
 
 public class ContactController {
 
-    ObservableList<Group> groups = GroupController.groups;
-
     @FXML
     private BorderPane mainPanel;
 
@@ -33,8 +31,9 @@ public class ContactController {
     @FXML
     private ComboBox<Group> cbGroup;
 
-    private static ObservableList<Contact> contacts;
+    private ObservableList<Group> groups = GroupController.groups;
 
+    public static ObservableList<Contact> contacts;
     static {
         try {
             contacts = ContactDAO.loadContacts();
@@ -49,9 +48,8 @@ public class ContactController {
         cbGroup.setItems(groups);
     }
 
-
     @FXML
-    public void showAddNewContactDialog() {
+    public void showAddNewContactDialog() throws IOException {
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.initOwner(mainPanel.getScene().getWindow());
         dialog.setTitle("Add new contact");
@@ -72,6 +70,12 @@ public class ContactController {
         Optional<ButtonType> result = dialog.showAndWait();
         if (result.isPresent() && result.get() == saveButton) {
             // Handle Save
+            AddContactController addController = fxmlLoader.getController();
+            Contact newContact = addController.getNewContact();
+
+            contacts.add(newContact);
+            // TODO: save to file
+            ContactDAO.saveContactsToFile();
         }
     }
 
@@ -110,6 +114,7 @@ public class ContactController {
         Optional<ButtonType> result = dialog.showAndWait();
         if (result.isPresent() && result.get() == saveButton) {
             // Handle Save
+
         }
 
     }
