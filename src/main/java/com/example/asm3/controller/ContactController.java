@@ -154,7 +154,7 @@ public class ContactController {
 
     //delete a selected contact
     @FXML
-    public void deleteContact() {
+    public void deleteContact() throws IOException {
         Contact selectedContact = contactsTable.getSelectionModel().getSelectedItem();
         if (selectedContact == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -173,6 +173,8 @@ public class ContactController {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
             // Delete contact
+            contacts.remove(selectedContact);
+            ContactDAO.saveContactsToFile();
             return;
         } else if (result.isPresent() && result.get() == ButtonType.CANCEL) {
             return;
