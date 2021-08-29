@@ -76,7 +76,8 @@ public class ContactController {
             // Check if all fields are blank
             if (addController.areAllFieldsBlank()) {
                 event.consume();
-                blankInValidHandle(addController);
+//                blankInValidHandle(addController);
+                addController.blankInvalidHandle();
             }
             // Check if PhoneField is valid
             if (!addController.checkPhoneFieldValidation(addController.getPhoneField())) {
@@ -145,8 +146,9 @@ public class ContactController {
         btSave.addEventFilter(ActionEvent.ACTION, event -> {
             if (updateController.areAllFieldsBlank()) {
                 event.consume();
-                blankInValidHandle(updateController);
+                updateController.blankInvalidHandle();
             }
+            updateController.getDialogPane().getScene().getWindow().sizeToScene(); // resize the dialog when children added
         });
 
         Optional<ButtonType> result = dialog.showAndWait();
@@ -209,63 +211,5 @@ public class ContactController {
             return;
         }
     }
-
-    /**
-     * Temporally saves fields input value into a String array
-     * Unfilled value will be left to null
-     * @param addController
-     * @return result array
-     */
-    private String[] saveTempInputValue(AddUpdateContactController addController) {
-        String firstName = null;
-        String lastName = null;
-        String phone = null;
-        String email = null;
-        String dob = null;
-        String group = null;
-        String s = (!addController.getFirstNameField().getText().isBlank()) ?
-                firstName = addController.getFirstNameField().getText() : null;
-        s = (!addController.getLastNameField().getText().isBlank())?
-                lastName = addController.getLastNameField().getText() : null;
-        s = (!addController.getPhoneField().getText().isBlank())?
-                phone = addController.getPhoneField().getText() : null;
-        s = (!addController.getEmailField().getText().isBlank())?
-                email = addController.getEmailField().getText() : null;
-        s =(addController.getBirthdayPicker().getValue() != null)?
-                dob = addController.getBirthdayPicker().getValue().toString() : null;
-        s = (addController.getGroupCombo().getValue() != null)?
-                group = addController.getGroupCombo().getValue().toString() : null;
-
-        return new String[]{firstName, lastName, phone, email, dob, group};
-    }
-
-    private void blankInValidHandle(AddUpdateContactController addController) {
-        if (addController.getFirstNameField().getText().isBlank()){
-            addController.fieldInvalidHandle(addController.getFirstNameField());
-        }
-        if (addController.getLastNameField().getText().isBlank()) {
-            addController.fieldInvalidHandle(addController.getLastNameField());
-        }
-        if (addController.getPhoneField().getText().isBlank()) {
-            addController.fieldInvalidHandle(addController.getPhoneField());
-        }
-        if (addController.getEmailField().getText().isBlank()) {
-            addController.fieldInvalidHandle(addController.getEmailField());
-        }
-        if (addController.getBirthdayPicker().getValue() == null) {
-            addController.fieldInvalidHandle(addController.getBirthdayPicker());
-        }
-        if (addController.getGroupCombo().getValue() == null) {
-            addController.fieldInvalidHandle(addController.getGroupCombo());
-        }
-        addController.blankFieldsExistHandle();
-    }
-
-    private void fillTempInputValue(String[] inputValue, AddUpdateContactController addController) {
-        addController.getFirstNameField().setText(inputValue[0]);
-        addController.getLastNameField().setText(inputValue[1]);
-        addController.getPhoneField().setText(inputValue[2]);
-        addController.getEmailField().setText(inputValue[3]);
-        addController.getBirthdayPicker().setValue(LocalDate.parse(inputValue[4],addController.getFormatter()));
-    }
+    
 }

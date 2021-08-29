@@ -243,6 +243,30 @@ public class AddUpdateContactController {
         control.setStyle("-fx-border-color: #B22222;");
     }
 
+    public void blankInvalidHandle() {
+        if (getFirstNameField().getText().isBlank()){
+            fieldInvalidHandle(getFirstNameField());
+        }
+        if (getLastNameField().getText().isBlank()) {
+            fieldInvalidHandle(getLastNameField());
+        }
+        if (getPhoneField().getText().isBlank()) {
+            fieldInvalidHandle(getPhoneField());
+        }
+        if (getEmailField().getText().isBlank()) {
+            fieldInvalidHandle(getEmailField());
+        }
+        if (getBirthdayPicker().getValue() == null) {
+            fieldInvalidHandle(getBirthdayPicker());
+        }
+        if (getGroupCombo().getValue() == null) {
+            fieldInvalidHandle(getGroupCombo());
+        }
+        blankFieldsExistHandle();
+    }
+
+
+
     public void updateContact(Contact contact) {
         firstNameField.setText(contact.getFirstName());
         lastNameField.setText(contact.getLastName());
