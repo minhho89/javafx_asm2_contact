@@ -16,7 +16,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.Optional;
 
 public class ContactController {
@@ -76,14 +75,47 @@ public class ContactController {
             // Check if all fields are blank
             if (addController.areAllFieldsBlank()) {
                 event.consume();
-                inValidHandle(addController);
+                addController.blankInvalidHandle();
+            } else {
+                // valid handle
+                for (Control control : addController.getControls()) {
+                    if (control instanceof TextField) {
+                        if (!((TextField) control).getText().isBlank()) {
+                            addController.fieldValidHandle(control);
+                        }
+                    }
+                    if (control instanceof DatePicker || control instanceof ComboBox) {
+                        if(((DatePicker)control).getValue() != null) {
+                            addController.fieldValidHandle(control);
+                        }
+                    }
+                }
+                addController.blankFieldsResolveHandle();
             }
+
             // Check if PhoneField is valid
             if (!addController.checkPhoneFieldValidation(addController.getPhoneField())) {
                 event.consume();
-                System.out.println("phone field handle");
+                addController.fieldInvalidHandle(addController.getPhoneField());
+                addController.phoneFieldInvalidationHandle();
+            } else {
+                // valid handle
                 addController.phoneFieldValidationHandle();
+                addController.fieldValidHandle(addController.getPhoneField());
             }
+
+            // Check if Email field is valid
+            if (!addController.checkEmailFieldValidation(addController.getEmailField())) {
+                event.consume();
+                addController.fieldInvalidHandle(addController.getEmailField());
+                addController.emailFieldInvalidationHandle();
+            } else {
+                // valid handle
+                addController.emailFieldValidationHandle();
+                addController.fieldValidHandle(addController.getEmailField());
+            }
+
+            addController.getDialogPane().getScene().getWindow().sizeToScene(); // resize the dialog when children added
         });
 
         Optional<ButtonType> result = dialog.showAndWait();
@@ -137,10 +169,50 @@ public class ContactController {
 
         // Handle input validation
         btSave.addEventFilter(ActionEvent.ACTION, event -> {
+            // Check if all fields are blank
             if (updateController.areAllFieldsBlank()) {
                 event.consume();
-                inValidHandle(updateController);
+                updateController.blankInvalidHandle();
+            } else {
+                // valid handle
+                for (Control control : updateController.getControls()) {
+                    if (control instanceof TextField) {
+                        if (!((TextField) control).getText().isBlank()) {
+                            updateController.fieldValidHandle(control);
+                        }
+                    }
+                    if (control instanceof DatePicker || control instanceof ComboBox) {
+                        if(((DatePicker)control).getValue() != null) {
+                            updateController.fieldValidHandle(control);
+                        }
+                    }
+                }
+                updateController.blankFieldsResolveHandle();
             }
+
+            // Check if PhoneField is valid
+            if (!updateController.checkPhoneFieldValidation(updateController.getPhoneField())) {
+                event.consume();
+                updateController.fieldInvalidHandle(updateController.getPhoneField());
+                updateController.phoneFieldInvalidationHandle();
+            } else {
+                // valid handle
+                updateController.phoneFieldValidationHandle();
+                updateController.fieldValidHandle(updateController.getPhoneField());
+            }
+
+            // Check if Email field is valid
+            if (!updateController.checkEmailFieldValidation(updateController.getEmailField())) {
+                event.consume();
+                updateController.fieldInvalidHandle(updateController.getEmailField());
+                updateController.emailFieldInvalidationHandle();
+            } else {
+                // valid handle
+                updateController.emailFieldValidationHandle();
+                updateController.fieldValidHandle(updateController.getEmailField());
+            }
+
+            updateController.getDialogPane().getScene().getWindow().sizeToScene(); // resize the dialog when children added
         });
 
         Optional<ButtonType> result = dialog.showAndWait();
@@ -155,7 +227,6 @@ public class ContactController {
                 // Save to file
                 ContactDAO.saveContactsToFile();
             }
-
         }
     }
 
@@ -204,62 +275,4 @@ public class ContactController {
         }
     }
 
-    /**
-     * Temporally saves fields input value into a String array
-     * Unfilled value will be left to null
-     * @param addController
-     * @return result array
-     */
-    private String[] saveTempInputValue(AddUpdateContactController addController) {
-        String firstName = null;
-        String lastName = null;
-        String phone = null;
-        String email = null;
-        String dob = null;
-        String group = null;
-        String s = (!addController.getFirstNameField().getText().isBlank()) ?
-                firstName = addController.getFirstNameField().getText() : null;
-        s = (!addController.getLastNameField().getText().isBlank())?
-                lastName = addController.getLastNameField().getText() : null;
-        s = (!addController.getPhoneField().getText().isBlank())?
-                phone = addController.getPhoneField().getText() : null;
-        s = (!addController.getEmailField().getText().isBlank())?
-                email = addController.getEmailField().getText() : null;
-        s =(addController.getBirthdayPicker().getValue() != null)?
-                dob = addController.getBirthdayPicker().getValue().toString() : null;
-        s = (addController.getGroupCombo().getValue() != null)?
-                group = addController.getGroupCombo().getValue().toString() : null;
-
-        return new String[]{firstName, lastName, phone, email, dob, group};
-    }
-
-    private void inValidHandle(AddUpdateContactController addController) {
-        if (addController.getFirstNameField().getText().isBlank()){
-            addController.getFirstNameField().setStyle("-fx-text-box-border: #B22222;");
-        }
-        if (addController.getLastNameField().getText().isBlank()) {
-            addController.getLastNameField().setStyle("-fx-text-box-border: #B22222;");
-        }
-        if (addController.getPhoneField().getText().isBlank()) {
-            addController.getPhoneField().setStyle("-fx-text-box-border: #B22222;");
-        }
-        if (addController.getEmailField().getText().isBlank()) {
-            addController.getEmailField().setStyle("-fx-text-box-border: #B22222;");
-        }
-        if (addController.getBirthdayPicker().getValue() == null) {
-            addController.getBirthdayPicker().setStyle("-fx-border-color: #B22222;");
-        }
-        if (addController.getGroupCombo().getValue() == null) {
-            addController.getGroupCombo().setStyle("-fx-border-color: #B22222;");
-        }
-        addController.getMessageLabel().setVisible(true);
-    }
-
-    private void fillTempInputValue(String[] inputValue, AddUpdateContactController addController) {
-        addController.getFirstNameField().setText(inputValue[0]);
-        addController.getLastNameField().setText(inputValue[1]);
-        addController.getPhoneField().setText(inputValue[2]);
-        addController.getEmailField().setText(inputValue[3]);
-        addController.getBirthdayPicker().setValue(LocalDate.parse(inputValue[4],addController.getFormatter()));
-    }
 }
