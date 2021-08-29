@@ -6,10 +6,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Control;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 import java.time.format.DateTimeFormatter;
 
@@ -26,6 +23,8 @@ public class AddContactController {
     private DatePicker birthdayPicker;
     @FXML
     private ComboBox<Group> groupCombo;
+    @FXML
+    private Label messageLabel;
 
     static ObservableList<Contact> contacts;
     static ObservableList<Group> groups = GroupController.groups;
@@ -36,6 +35,9 @@ public class AddContactController {
         contacts = ContactController.contacts;
     }
 
+    public Label getMessageLabel() {
+        return messageLabel;
+    }
 
     public TextField getFirstNameField() {
         return firstNameField;
@@ -68,6 +70,7 @@ public class AddContactController {
     @FXML
     void initialize() {
         groupCombo.setItems(groups);
+        messageLabel.setVisible(false);
 
         firstNameField.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override

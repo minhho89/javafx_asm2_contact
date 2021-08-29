@@ -84,19 +84,19 @@ public class ContactController {
         });
 
         Optional<ButtonType> result = dialog.showAndWait();
-//        if (result.isPresent() && result.get() == saveButtonType) {
-
-            // Check if any fields empty
-//            if (!addController.areAllFieldsBlank()) {
-//                Contact newContact = addController.getNewContact();
-//                contacts.add(newContact);
-//                // Save to file
-//                ContactDAO.saveContactsToFile();
-//            } else {
+        if (result.isPresent() && result.get() == saveButtonType) {
+//             Check if any fields empty
+            if (!addController.areAllFieldsBlank()) {
+                Contact newContact = addController.getNewContact();
+                contacts.add(newContact);
+                // Save to file
+                ContactDAO.saveContactsToFile();
+            }
+//            else {
 //                inValidHandle(addController);
 //                System.out.println("Not all field blank");
 //            }
-//        }
+        }
     }
 
     /**
@@ -147,6 +147,7 @@ public class ContactController {
         if (addController.getGroupCombo().getValue() == null) {
             addController.getGroupCombo().setStyle("-fx-border-color: #B22222;");
         }
+        addController.getMessageLabel().setVisible(true);
     }
 
     private void fillTempInputValue(String[] inputValue, AddContactController addController) {
