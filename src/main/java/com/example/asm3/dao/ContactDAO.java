@@ -1,45 +1,87 @@
 package com.example.asm3.dao;
 
+import com.example.asm3.controller.GroupController;
 import com.example.asm3.entity.Contact;
+import com.example.asm3.entity.Group;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
+import java.io.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Scanner;
 
 
 public class ContactDAO {
 
-    //load all Contacts from the file Contact in to a list
-    public List<Contact> loadContact(String fname) throws Exception {
-        throw new UnsupportedOperationException("Remove this line and implement your code here!");
+    private static final File FILE = new File("./src/main/java/com/example/asm3/data/contacts.txt");
+    private static final String PATH = FILE.getAbsolutePath();
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+
+    static ObservableList<Contact> contacts;
+    static ObservableList<Group> groups = GroupController.groups;
+
+    public static ObservableList<Contact> loadContacts() throws IOException {
+        contacts = FXCollections.observableArrayList();
+        Scanner sc = null;
+
+        try {
+            sc = new Scanner(new FileReader(PATH));
+            sc.useDelimiter(",,,");
+            while(sc.hasNextLine()){
+                sc.skip(sc.delimiter());
+                String firstName = sc.next().trim();
+                String lastName = sc.next();
+                String phone = sc.next();
+                String email = sc.next();
+                LocalDate dob =  LocalDate.parse(sc.next(), FORMATTER);
+                String groupName = sc.next().trim();
+                int index = GroupController.findIndexByGroupName(groupName);
+                Group group;
+                if (index != -1) {
+                    group = groups.get(index);
+                } else {
+                   group = null;
+                }
+                Contact contact = new Contact(firstName, lastName, phone, email, dob, group);
+                contacts.add(contact);
+
+//                 FOR DEBUG
+//                System.out.println("FirstName " + sc.next().trim());
+//                System.out.println("LastName " + sc.next());
+//                System.out.println("phone " + sc.next());
+//                System.out.println("Email " + sc.next());
+//                System.out.println("Dob " + sc.next());
+//                System.out.println("Group " + sc.next());
+//                System.out.println("-----------------");
+            }
+        } finally {
+          sc.close();
+        }
+        return contacts;
     }
 
-    //save all Contacts from a given list to a text file
-    public void saveToFile(List<Contact> g, String fname) throws Exception {
-        throw new UnsupportedOperationException("Remove this line and implement your code here!");
-    }
+    public static void saveContactsToFile() throws IOException {
+        Writer wr = null;
+        String firstName, lastName, phone, email, dob, group;
+        StringBuilder result;
+        try {
+            wr = new FileWriter(FILE);
+            for(Contact contact : contacts) {
+                firstName = contact.getFirstName();
+                lastName = contact.getLastName();
+                phone = contact.getPhone();
+                email = contact.getEmail();
+                dob = contact.getDob().format(FORMATTER);
+                group = contact.getGroup().getName();
 
-    //return the first position of a given contact g in the list
-    //otherwise return -1
-    public int indexOf(List<Contact> list, Contact g) {
-        throw new UnsupportedOperationException("Remove this line and implement your code here!");
-    }
-
-    //save a Contact to a current list
-    public void saveToList(List<Contact> list, Contact g) {
-        list.add(g);
-    }
-
-    //update information of a contact c at position i in the list
-    public void updateContact(List<Contact> list, Contact c, int i) {
-        throw new UnsupportedOperationException("Remove this line and implement your code here!");
-    }
-
-    //return a list of Contact who information matched given search word
-    public List<Contact> search(List<Contact> c, String group, String search) {
-        throw new UnsupportedOperationException("Remove this line and implement your code here!");
-    }
-
-    //return a list of Contact who is in a given group
-    public List<Contact> contactByGroup(List<Contact> c, String group) {
-        throw new UnsupportedOperationException("Remove this line and implement your code here!");
+                result = new StringBuilder(",,," + firstName + ",,," + lastName + ",,," + phone
+                        + ",,," + email + ",,," + dob + ",,," + group + "\n");
+                wr.write(result.toString());
+            }
+        } finally {
+            wr.close();
+        }
     }
 }

@@ -1,43 +1,182 @@
 package com.example.asm3.controller;
 
+import com.example.asm3.entity.Contact;
 import com.example.asm3.entity.Group;
-import javafx.collections.FXCollections;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
+import javafx.scene.control.*;
 
-
+import java.time.format.DateTimeFormatter;
 
 public class AddContactController {
-
-    ObservableList<Group> groups = FXCollections.observableArrayList();
-
-//    private List<Contact> contacts;
-
-//    public  void setContacts(List<Contact> contacts) {
-//        this.contacts = contacts;
-//    }
+    @FXML
+    private TextField firstNameField;
+    @FXML
+    private TextField lastNameField;
+    @FXML
+    private TextField phoneField;
+    @FXML
+    private TextField emailField;
+    @FXML
+    private DatePicker birthdayPicker;
     @FXML
     private ComboBox<Group> groupCombo;
+    @FXML
+    private Label messageLabel;
 
-    public void setAddContactController(ContactController contactController) {
-        throw new UnsupportedOperationException("Remove this line and implement your code here!");
+    static ObservableList<Contact> contacts;
+    static ObservableList<Group> groups = GroupController.groups;
+
+    static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+
+    public AddContactController() {
+        contacts = ContactController.contacts;
+    }
+
+    public Label getMessageLabel() {
+        return messageLabel;
+    }
+
+    public TextField getFirstNameField() {
+        return firstNameField;
+    }
+
+    public TextField getLastNameField() {
+        return lastNameField;
+    }
+
+    public TextField getPhoneField() {
+        return phoneField;
+    }
+
+    public TextField getEmailField() {
+        return emailField;
+    }
+
+    public DatePicker getBirthdayPicker() {
+        return birthdayPicker;
+    }
+
+    public ComboBox<Group> getGroupCombo() {
+        return groupCombo;
+    }
+
+    public static DateTimeFormatter getFormatter() {
+        return FORMATTER;
     }
 
     @FXML
     void initialize() {
+        groupCombo.setItems(groups);
+        messageLabel.setVisible(false);
+
+        firstNameField.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
+                if (aBoolean && !firstNameField.getText().isBlank()) {
+                    blankFieldsFilledHandler(firstNameField);
+                }
+            }
+        });
+
+        lastNameField.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
+                if (aBoolean && !lastNameField.getText().isBlank()) {
+                    blankFieldsFilledHandler(lastNameField);
+                }
+            }
+        });
+
+        phoneField.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
+                if (aBoolean && !phoneField.getText().isBlank()) {
+                    blankFieldsFilledHandler(phoneField);
+                }
+            }
+        });
+
+        emailField.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
+                if (aBoolean && !emailField.getText().isBlank()) {
+                    blankFieldsFilledHandler(emailField);
+                }
+            }
+        });
+
+        birthdayPicker.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
+                if (aBoolean && birthdayPicker.getValue() != null) {
+                    blankFieldsFilledHandler(birthdayPicker);
+                }
+            }
+        });
+
+        groupCombo.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
+                if (aBoolean && groupCombo.getValue() != null) {
+                    blankFieldsFilledHandler(groupCombo);
+                }
+            }
+        });
     }
 
-    @FXML
-    public void saveContact() {
+    private void addContact(Contact contact) {
+        try {
+            contacts.add(contact);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
-//    public  void saveContact(ActionEvent evt)throws  Exception {
-//        throw new UnsupportedOperationException("Remove this line and implement your code here!");
-//    }
 
-    @FXML
-    public void cancelButton_Click() {
+    public Contact getNewContact() {
+        Contact contact = new Contact();
+        contact.setFirstName(firstNameField.getText());
+        contact.setLastName(lastNameField.getText());
+        contact.setPhone(phoneField.getText());
+        contact.setEmail(emailField.getText());
+        contact.setDob(birthdayPicker.getValue());
+        contact.setGroup(groupCombo.getValue());
 
+        return contact;
+    }
+
+    /**
+     * Checks if is there any field blank or not
+     * A blank field is a field with null value or holds an empty String
+     * @return true if blank, otherwise returns false
+     */
+    public boolean areAllFieldsBlank() {
+        if (firstNameField.getText().isBlank() ||
+        lastNameField.getText().isBlank() ||
+        phoneField.getText().isBlank() ||
+        emailField.getText().isBlank() ||
+        birthdayPicker.toString().isBlank() ||
+        groupCombo.getValue().toString().isBlank()) {
+            return true;
+        }
+        return false;
+    }
+
+    public String findBlankField() {
+        if (firstNameField.getText().isBlank()) return "First Name Field";
+        if (lastNameField.getText().isBlank()) return "Last Name Field";
+        if (phoneField.getText().isBlank()) return "Phone Field";
+        if (emailField.getText().isBlank()) return "Email Field";
+        if (birthdayPicker.toString().isBlank()) return "Birthday Field";
+        if (groupCombo.getValue().toString().isBlank()) return "Group Selection Field";
+
+        return "All fields are filled";
+    }
+
+    public void blankFieldsFilledHandler(Control control) {
+        control.setStyle("-fx-border-color: grey;");
     }
 }

@@ -1,6 +1,7 @@
 package com.example.asm3.controller;
 
 import com.example.asm3.Main;
+import com.example.asm3.dao.ContactDAO;
 import com.example.asm3.entity.Contact;
 import com.example.asm3.entity.Group;
 import javafx.collections.FXCollections;
@@ -16,13 +17,11 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 public class ContactController {
-
-    ObservableList<Contact> contacts = FXCollections.observableArrayList();
-    ObservableList<Group> groups = FXCollections.observableArrayList();
 
     @FXML
     private BorderPane mainPanel;
@@ -33,36 +32,25 @@ public class ContactController {
     @FXML
     private ComboBox<Group> cbGroup;
 
+    private ObservableList<Group> groups = GroupController.groups;
+
+    public static ObservableList<Contact> contacts;
+    static {
+        try {
+            contacts = ContactDAO.loadContacts();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @FXML
     void initialize() {
-
-
-    }
-
-    //output all contact to tblContact
-    public void showContact(List<Contact> c) {
-        throw new UnsupportedOperationException("Remove this line and implement your code here!");
-    }
-
-    //output all groups to dropdownlist
-    public void showGroup(List<Group> g) {
-        throw new UnsupportedOperationException("Remove this line and implement your code here!");
-    }
-
-    //do corresponding actions for search, delete, update and add contact
-    public void searchContact(ActionEvent evt) throws Exception {
-        throw new UnsupportedOperationException("Remove this line and implement your code here!");
-
-    }
-
-    //manage the groups
-    public void groupPanel() throws Exception {
-        throw new UnsupportedOperationException("Remove this line and implement your code here!");
-
+        contactsTable.setItems(contacts);
+        cbGroup.setItems(groups);
     }
 
     @FXML
-    public void showAddNewContactDialog() {
+    public void showAddNewContactDialog() throws IOException {
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.initOwner(mainPanel.getScene().getWindow());
         dialog.setTitle("Add new contact");
@@ -76,14 +64,98 @@ public class ContactController {
             return;
         }
 
-        ButtonType saveButton = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().add(saveButton);
+        ButtonType saveButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+
+        dialog.getDialogPane().getButtonTypes().add(saveButtonType);
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
 
+        final Button btSave = (Button) dialog.getDialogPane().lookupButton(saveButtonType);
+        System.out.println(btSave);
+
+        AddContactController addController = fxmlLoader.getController();
+        System.out.println(addController);
+
+        // Handle input validation
+        btSave.addEventFilter(ActionEvent.ACTION, event -> {
+            if (addController.areAllFieldsBlank()) {
+                event.consume();
+                inValidHandle(addController);
+            }
+        });
+
         Optional<ButtonType> result = dialog.showAndWait();
-        if (result.isPresent() && result.get() == saveButton) {
-            // Handle Save
+        if (result.isPresent() && result.get() == saveButtonType) {
+//             Check if any fields empty
+            if (!addController.areAllFieldsBlank()) {
+                Contact newContact = addController.getNewContact();
+                contacts.add(newContact);
+                // Save to file
+                ContactDAO.saveContactsToFile();
+            }
+//            else {
+//                inValidHandle(addController);
+//                System.out.println("Not all field blank");
+//            }
         }
+    }
+
+    /**
+     * Temporally saves fields input value into a String array
+     * Unfilled value will be left to null
+     * @param addController
+     * @return result array
+     */
+    private String[] saveTempInputValue(AddContactController addController) {
+        String firstName = null;
+        String lastName = null;
+        String phone = null;
+        String email = null;
+        String dob = null;
+        String group = null;
+        String s = (!addController.getFirstNameField().getText().isBlank()) ?
+                firstName = addController.getFirstNameField().getText() : null;
+        s = (!addController.getLastNameField().getText().isBlank())?
+            lastName = addController.getLastNameField().getText() : null;
+        s = (!addController.getPhoneField().getText().isBlank())?
+            phone = addController.getPhoneField().getText() : null;
+        s = (!addController.getEmailField().getText().isBlank())?
+            email = addController.getEmailField().getText() : null;
+        s =(addController.getBirthdayPicker().getValue() != null)?
+            dob = addController.getBirthdayPicker().getValue().toString() : null;
+        s = (addController.getGroupCombo().getValue() != null)?
+            group = addController.getGroupCombo().getValue().toString() : null;
+
+        return new String[]{firstName, lastName, phone, email, dob, group};
+    }
+
+    private void inValidHandle(AddContactController addController) {
+        if (addController.getFirstNameField().getText().isBlank()){
+            addController.getFirstNameField().setStyle("-fx-text-box-border: #B22222;");
+        }
+        if (addController.getLastNameField().getText().isBlank()) {
+            addController.getLastNameField().setStyle("-fx-text-box-border: #B22222;");
+        }
+        if (addController.getPhoneField().getText().isBlank()) {
+            addController.getPhoneField().setStyle("-fx-text-box-border: #B22222;");
+        }
+        if (addController.getEmailField().getText().isBlank()) {
+            addController.getEmailField().setStyle("-fx-text-box-border: #B22222;");
+        }
+        if (addController.getBirthdayPicker().getValue() == null) {
+            addController.getBirthdayPicker().setStyle("-fx-border-color: #B22222;");
+        }
+        if (addController.getGroupCombo().getValue() == null) {
+            addController.getGroupCombo().setStyle("-fx-border-color: #B22222;");
+        }
+        addController.getMessageLabel().setVisible(true);
+    }
+
+    private void fillTempInputValue(String[] inputValue, AddContactController addController) {
+        addController.getFirstNameField().setText(inputValue[0]);
+        addController.getLastNameField().setText(inputValue[1]);
+        addController.getPhoneField().setText(inputValue[2]);
+        addController.getEmailField().setText(inputValue[3]);
+        addController.getBirthdayPicker().setValue(LocalDate.parse(inputValue[4],addController.getFormatter()));
     }
 
     //update a contact
@@ -121,6 +193,7 @@ public class ContactController {
         Optional<ButtonType> result = dialog.showAndWait();
         if (result.isPresent() && result.get() == saveButton) {
             // Handle Save
+
         }
 
     }

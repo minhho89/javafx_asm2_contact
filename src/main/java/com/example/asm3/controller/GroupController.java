@@ -31,12 +31,9 @@ public class GroupController {
     @FXML
     private TextField groupNameField;
 
-    public void setContactController(ContactController contactController) {
-        throw new UnsupportedOperationException("Remove this line and implement your code here!");
-    }
 
-    private static ObservableList<Group> groups;
-    private static ObservableList<Contact> contacts;
+    public static ObservableList<Group> groups;
+    static ObservableList<Contact> contacts;
 
     static {
         try {
@@ -140,13 +137,11 @@ public class GroupController {
         }
     }
 
-    
     //delete a group, delete failed if there are some contact is in deleted one
     @FXML
     public void deleteAction()  {
         Group selectedItem = selectedGroup();
-        System.out.println(selectedItem.getName());
-        if(!checkGroupHasContacts(selectedItem)) {
+        if(!belongToGroup(selectedItem)) {
             // delete
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Confirmation");
@@ -171,13 +166,26 @@ public class GroupController {
         }
     }
 
-    private boolean checkGroupHasContacts(Group CheckingGroup) {
-        for (Contact contact : contacts) {
-            if (contact.getGroup().equals(CheckingGroup)) return true;
+
+    private boolean belongToGroup(Group CheckingGroup) {
+        if (contacts != null) {
+            for (Contact contact : contacts) {
+                if (contact.getGroup().equals(CheckingGroup)) return true;
+            }
         }
         return false;
     }
 
+    public static int findIndexByGroupName(String groupName) {
+        int i = 0;
+        for (Group group : groups) {
+            if (groupName.equalsIgnoreCase(group.getName())) {
+                return i;
+            }
+            i++;
+        }
+        return -1;
+    }
     //operations on each button on window
     public void groupAction(ActionEvent evt) throws Exception {
         throw new UnsupportedOperationException("Remove this line and implement your code here!");
