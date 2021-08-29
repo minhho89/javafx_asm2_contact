@@ -36,6 +36,7 @@
         </GridPane>
 
             <Label fx:id="messageLabel" text="* Please fill the empty field(s)" textFill="brown"/>
+            <Label fx:id="messageLabel2" text="" textFill="brown"/>
 
         </VBox>
     </content>

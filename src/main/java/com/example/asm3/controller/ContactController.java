@@ -73,9 +73,16 @@ public class ContactController {
 
         // Handle input validation
         btSave.addEventFilter(ActionEvent.ACTION, event -> {
+            // Check if all fields are blank
             if (addController.areAllFieldsBlank()) {
                 event.consume();
                 inValidHandle(addController);
+            }
+            // Check if PhoneField is valid
+            if (!addController.checkPhoneFieldValidation(addController.getPhoneField())) {
+                event.consume();
+                System.out.println("phone field handle");
+                addController.phoneFieldValidationHandle();
             }
         });
 

@@ -6,9 +6,12 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 
 import java.time.format.DateTimeFormatter;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class AddUpdateContactController {
     @FXML
@@ -25,6 +28,8 @@ public class AddUpdateContactController {
     private ComboBox<Group> groupCombo;
     @FXML
     private Label messageLabel;
+    @FXML
+    private Label messageLabel2;
 
     static ObservableList<Contact> contacts;
     static ObservableList<Group> groups = GroupController.groups;
@@ -71,6 +76,7 @@ public class AddUpdateContactController {
     void initialize() {
         groupCombo.setItems(groups);
         messageLabel.setVisible(false);
+        messageLabel2.setVisible(false);
 
         firstNameField.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
@@ -93,8 +99,14 @@ public class AddUpdateContactController {
         phoneField.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
-                if (aBoolean && !phoneField.getText().isBlank()) {
-                    blankFieldsFilledHandler(phoneField);
+                if (aBoolean) {
+                    if (!phoneField.getText().isBlank()) {
+                        blankFieldsFilledHandler(phoneField);
+                    } else {
+                        if (checkPhoneFieldValidation(phoneField)) {
+
+                        };
+                    }
                 }
             }
         });
@@ -125,6 +137,23 @@ public class AddUpdateContactController {
                 }
             }
         });
+    }
+
+    public boolean checkPhoneFieldValidation(TextField phoneField) {
+        Pattern pattern = Pattern.compile("^\\d{10}$");
+        Matcher matcher = pattern.matcher(phoneField.getText());
+        return matcher.matches();
+    }
+
+    public void phoneFieldValidationHandle() {
+        messageLabel2.setVisible(true);
+        messageLabel2.setText("* Phone field accepts only 10 digits input value");
+    }
+
+    public boolean checkEmailFieldValidation(TextField emailField) {
+        Pattern pattern = Pattern.compile("^\\d{10}$");
+        Matcher matcher = pattern.matcher(phoneField.getText());
+        return matcher.matches();
     }
 
     private void addContact(Contact contact) {
