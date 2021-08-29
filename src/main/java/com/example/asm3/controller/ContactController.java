@@ -16,7 +16,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.Optional;
 
 public class ContactController {
@@ -76,9 +75,29 @@ public class ContactController {
             // Check if all fields are blank
             if (addController.areAllFieldsBlank()) {
                 event.consume();
-//                blankInValidHandle(addController);
                 addController.blankInvalidHandle();
+            } else {
+                // valid handle
+                for (Control control : addController.getControls()) {
+                    if (control instanceof TextField) {
+                        if (!((TextField) control).getText().isBlank()) {
+                            addController.fieldValidHandle(control);
+                        }
+                    }
+                    if (control instanceof DatePicker) {
+                        if(((DatePicker)control).getValue() != null) {
+                            addController.fieldValidHandle(control);
+                        }
+                    }
+                    if (control instanceof ComboBox) {
+                        if(((ComboBox)control).getValue() != null) {
+                            addController.fieldInvalidHandle(control);
+                        }
+                    }
+                }
+                addController.blankFieldsResolveHandle();
             }
+
             // Check if PhoneField is valid
             if (!addController.checkPhoneFieldValidation(addController.getPhoneField())) {
                 event.consume();
@@ -211,5 +230,5 @@ public class ContactController {
             return;
         }
     }
-    
+
 }

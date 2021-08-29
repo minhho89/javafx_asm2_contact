@@ -4,6 +4,7 @@ import com.example.asm3.entity.Contact;
 import com.example.asm3.entity.Group;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -32,8 +33,12 @@ public class AddUpdateContactController {
     @FXML
     private DialogPane dialogPane;
 
+    Label blankMessage = new Label();
+
     static ObservableList<Contact> contacts;
     static ObservableList<Group> groups = GroupController.groups;
+
+    private ObservableList<Control> controls;
 
     private static boolean emailFailureFlag;
     private static boolean phoneFailureFlag;
@@ -43,8 +48,13 @@ public class AddUpdateContactController {
 
     public AddUpdateContactController() {
         contacts = ContactController.contacts;
+        controls = FXCollections.observableArrayList(firstNameField, lastNameField, phoneField,
+                emailField, birthdayPicker, groupCombo);
     }
 
+    public ObservableList<Control> getControls() {
+        return controls;
+    }
 
     public TextField getFirstNameField() {
         return firstNameField;
@@ -89,7 +99,7 @@ public class AddUpdateContactController {
             @Override
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
                 if (aBoolean && !firstNameField.getText().isBlank()) {
-                    fieldValidHandler(firstNameField);
+                    fieldValidHandle(firstNameField);
                 }
             }
         });
@@ -98,7 +108,7 @@ public class AddUpdateContactController {
             @Override
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
                 if (aBoolean && !lastNameField.getText().isBlank()) {
-                    fieldValidHandler(lastNameField);
+                    fieldValidHandle(lastNameField);
                 }
             }
         });
@@ -107,7 +117,7 @@ public class AddUpdateContactController {
             @Override
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
                 if (aBoolean && phoneField.getText().isBlank() && checkPhoneFieldValidation(phoneField)) {
-                    fieldValidHandler(phoneField);
+                    fieldValidHandle(phoneField);
                 }
             }
         });
@@ -116,7 +126,7 @@ public class AddUpdateContactController {
             @Override
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
                 if (aBoolean && !emailField.getText().isBlank()) {
-                    fieldValidHandler(emailField);
+                    fieldValidHandle(emailField);
                 }
             }
         });
@@ -125,7 +135,7 @@ public class AddUpdateContactController {
             @Override
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
                 if (aBoolean && birthdayPicker.getValue() != null) {
-                    fieldValidHandler(birthdayPicker);
+                    fieldValidHandle(birthdayPicker);
                 }
             }
         });
@@ -134,7 +144,7 @@ public class AddUpdateContactController {
             @Override
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
                 if (aBoolean && groupCombo.getValue() != null) {
-                    fieldValidHandler(groupCombo);
+                    fieldValidHandle(groupCombo);
                 }
             }
         });
@@ -148,12 +158,23 @@ public class AddUpdateContactController {
 
     public void blankFieldsExistHandle() {
         if (!blankFieldFailureFlag) {
-            Label message = new Label("* Please fill value to empty field(s)");
-            message.setTextFill(Color.BROWN);
-            vbox.getChildren().add(message);
+            blankMessage.setText("* Please fill value to empty field(s)");
+            blankMessage.setTextFill(Color.BROWN);
+            vbox.getChildren().add(blankMessage);
             blankFieldFailureFlag = true;
         }
     }
+
+    public void blankFieldsResolveHandle() {
+        if (blankFieldFailureFlag) {
+            try {
+                vbox.getChildren().remove(blankMessage);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
     public boolean checkPhoneFieldValidation(TextField phoneField) {
         Pattern pattern = Pattern.compile("^\\d{10}$");
@@ -182,17 +203,6 @@ public class AddUpdateContactController {
             vbox.getChildren().add(message);
             emailFailureFlag = true;
         }
-    }
-
-
-
-    private void addContact(Contact contact) {
-        try {
-            contacts.add(contact);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
     }
 
     public Contact getInputContact() {
@@ -235,7 +245,7 @@ public class AddUpdateContactController {
         return "All fields are filled";
     }
 
-    public void fieldValidHandler(Control control) {
+    public void fieldValidHandle(Control control) {
         control.setStyle("-fx-border-color: grey;");
     }
 
