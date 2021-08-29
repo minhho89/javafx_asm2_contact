@@ -34,6 +34,8 @@ public class AddUpdateContactController {
     private DialogPane dialogPane;
 
     Label blankMessage = new Label();
+    Label phoneMessage = new Label();
+    Label emailMessage = new Label();
 
     static ObservableList<Contact> contacts;
     static ObservableList<Group> groups = GroupController.groups;
@@ -125,7 +127,7 @@ public class AddUpdateContactController {
         emailField.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
-                if (aBoolean && !emailField.getText().isBlank()) {
+                if (aBoolean && !emailField.getText().isBlank() && checkEmailFieldValidation(emailField)) {
                     fieldValidHandle(emailField);
                 }
             }
@@ -175,19 +177,30 @@ public class AddUpdateContactController {
         }
     }
 
-
     public boolean checkPhoneFieldValidation(TextField phoneField) {
         Pattern pattern = Pattern.compile("^\\d{10}$");
         Matcher matcher = pattern.matcher(phoneField.getText());
         return matcher.matches();
     }
 
-    public void phoneFieldValidationHandle() {
+    public void phoneFieldInvalidationHandle() {
         if (!phoneFailureFlag) {
-            Label message = new Label("* Phone field accepts only 10 digits input value");
-            message.setTextFill(Color.BROWN);
-            vbox.getChildren().add(message);
+            phoneMessage.setText("* Phone field accepts only 10 digits input value");
+            phoneMessage.setTextFill(Color.BROWN);
+            vbox.getChildren().add(phoneMessage);
             phoneFailureFlag = true;
+        }
+    }
+
+    public void phoneFieldValidationHandle() {
+        if (phoneFailureFlag) {
+            try {
+                vbox.getChildren().remove(phoneMessage);
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                phoneFailureFlag = false;
+            }
         }
     }
 
@@ -196,12 +209,24 @@ public class AddUpdateContactController {
         return emailField.getText().matches(regex);
     }
 
-    public void emailFieldValidationHandle() {
+    public void emailFieldInvalidationHandle() {
         if (!emailFailureFlag) {
-            Label message = new Label("* The email address is not valid");
-            message.setTextFill(Color.BROWN);
-            vbox.getChildren().add(message);
+            emailMessage.setText("* The email address is not valid");
+            emailMessage.setTextFill(Color.BROWN);
+            vbox.getChildren().add(emailMessage);
             emailFailureFlag = true;
+        }
+    }
+
+    public void emailFieldValidationHandle() {
+        if (emailFailureFlag) {
+            try {
+                vbox.getChildren().remove(emailMessage);
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                emailFailureFlag = false;
+            }
         }
     }
 
@@ -274,7 +299,6 @@ public class AddUpdateContactController {
         }
         blankFieldsExistHandle();
     }
-
 
 
     public void updateContact(Contact contact) {

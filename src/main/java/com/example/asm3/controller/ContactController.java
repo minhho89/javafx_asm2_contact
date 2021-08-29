@@ -84,14 +84,9 @@ public class ContactController {
                             addController.fieldValidHandle(control);
                         }
                     }
-                    if (control instanceof DatePicker) {
+                    if (control instanceof DatePicker || control instanceof ComboBox) {
                         if(((DatePicker)control).getValue() != null) {
                             addController.fieldValidHandle(control);
-                        }
-                    }
-                    if (control instanceof ComboBox) {
-                        if(((ComboBox)control).getValue() != null) {
-                            addController.fieldInvalidHandle(control);
                         }
                     }
                 }
@@ -101,12 +96,23 @@ public class ContactController {
             // Check if PhoneField is valid
             if (!addController.checkPhoneFieldValidation(addController.getPhoneField())) {
                 event.consume();
+                addController.fieldInvalidHandle(addController.getPhoneField());
+                addController.phoneFieldInvalidationHandle();
+            } else {
+                // valid handle
                 addController.phoneFieldValidationHandle();
+                addController.fieldValidHandle(addController.getPhoneField());
             }
+
             // Check if Email field is valid
             if (!addController.checkEmailFieldValidation(addController.getEmailField())) {
                 event.consume();
+                addController.fieldInvalidHandle(addController.getEmailField());
+                addController.emailFieldInvalidationHandle();
+            } else {
+                // valid handle
                 addController.emailFieldValidationHandle();
+                addController.fieldValidHandle(addController.getEmailField());
             }
 
             addController.getDialogPane().getScene().getWindow().sizeToScene(); // resize the dialog when children added
