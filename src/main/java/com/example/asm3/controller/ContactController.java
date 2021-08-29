@@ -69,7 +69,7 @@ public class ContactController {
 
         final Button btSave = (Button) dialog.getDialogPane().lookupButton(saveButtonType);
 
-        AddContactController addController = fxmlLoader.getController();
+        AddUpdateContactController addController = fxmlLoader.getController();
 
         // Handle input validation
         btSave.addEventFilter(ActionEvent.ACTION, event -> {
@@ -125,7 +125,7 @@ public class ContactController {
 
         final Button btSave = (Button) dialog.getDialogPane().lookupButton(saveButtonType);
 
-        AddContactController updateController = fxmlLoader.getController();
+        AddUpdateContactController updateController = fxmlLoader.getController();
         updateController.updateContact(selectedContact);
 
         // Handle input validation
@@ -201,7 +201,7 @@ public class ContactController {
      * @param addController
      * @return result array
      */
-    private String[] saveTempInputValue(AddContactController addController) {
+    private String[] saveTempInputValue(AddUpdateContactController addController) {
         String firstName = null;
         String lastName = null;
         String phone = null;
@@ -224,7 +224,7 @@ public class ContactController {
         return new String[]{firstName, lastName, phone, email, dob, group};
     }
 
-    private void inValidHandle(AddContactController addController) {
+    private void inValidHandle(AddUpdateContactController addController) {
         if (addController.getFirstNameField().getText().isBlank()){
             addController.getFirstNameField().setStyle("-fx-text-box-border: #B22222;");
         }
@@ -246,7 +246,7 @@ public class ContactController {
         addController.getMessageLabel().setVisible(true);
     }
 
-    private void fillTempInputValue(String[] inputValue, AddContactController addController) {
+    private void fillTempInputValue(String[] inputValue, AddUpdateContactController addController) {
         addController.getFirstNameField().setText(inputValue[0]);
         addController.getLastNameField().setText(inputValue[1]);
         addController.getPhoneField().setText(inputValue[2]);
