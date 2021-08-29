@@ -169,10 +169,49 @@ public class ContactController {
 
         // Handle input validation
         btSave.addEventFilter(ActionEvent.ACTION, event -> {
+            // Check if all fields are blank
             if (updateController.areAllFieldsBlank()) {
                 event.consume();
                 updateController.blankInvalidHandle();
+            } else {
+                // valid handle
+                for (Control control : updateController.getControls()) {
+                    if (control instanceof TextField) {
+                        if (!((TextField) control).getText().isBlank()) {
+                            updateController.fieldValidHandle(control);
+                        }
+                    }
+                    if (control instanceof DatePicker || control instanceof ComboBox) {
+                        if(((DatePicker)control).getValue() != null) {
+                            updateController.fieldValidHandle(control);
+                        }
+                    }
+                }
+                updateController.blankFieldsResolveHandle();
             }
+
+            // Check if PhoneField is valid
+            if (!updateController.checkPhoneFieldValidation(updateController.getPhoneField())) {
+                event.consume();
+                updateController.fieldInvalidHandle(updateController.getPhoneField());
+                updateController.phoneFieldInvalidationHandle();
+            } else {
+                // valid handle
+                updateController.phoneFieldValidationHandle();
+                updateController.fieldValidHandle(updateController.getPhoneField());
+            }
+
+            // Check if Email field is valid
+            if (!updateController.checkEmailFieldValidation(updateController.getEmailField())) {
+                event.consume();
+                updateController.fieldInvalidHandle(updateController.getEmailField());
+                updateController.emailFieldInvalidationHandle();
+            } else {
+                // valid handle
+                updateController.emailFieldValidationHandle();
+                updateController.fieldValidHandle(updateController.getEmailField());
+            }
+
             updateController.getDialogPane().getScene().getWindow().sizeToScene(); // resize the dialog when children added
         });
 
@@ -188,7 +227,6 @@ public class ContactController {
                 // Save to file
                 ContactDAO.saveContactsToFile();
             }
-
         }
     }
 

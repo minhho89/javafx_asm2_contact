@@ -88,10 +88,6 @@ public class AddUpdateContactController {
         return FORMATTER;
     }
 
-    public VBox getVBox() {
-        return vbox;
-    }
-
     @FXML
     void initialize() {
         groupCombo.setItems(groups);
