@@ -76,14 +76,19 @@ public class ContactController {
             // Check if all fields are blank
             if (addController.areAllFieldsBlank()) {
                 event.consume();
-                inValidHandle(addController);
+                blankInValidHandle(addController);
             }
             // Check if PhoneField is valid
             if (!addController.checkPhoneFieldValidation(addController.getPhoneField())) {
                 event.consume();
-                System.out.println("phone field handle");
                 addController.phoneFieldValidationHandle();
             }
+            // Check if Email field is valid
+            if (!addController.checkEmailFieldValidation(addController.getEmailField())) {
+                event.consume();
+                addController.emailFieldValidationHandle();
+            }
+
             addController.getDialogPane().getScene().getWindow().sizeToScene(); // resize the dialog when children added
         });
 
@@ -140,7 +145,7 @@ public class ContactController {
         btSave.addEventFilter(ActionEvent.ACTION, event -> {
             if (updateController.areAllFieldsBlank()) {
                 event.consume();
-                inValidHandle(updateController);
+                blankInValidHandle(updateController);
             }
         });
 
@@ -234,24 +239,24 @@ public class ContactController {
         return new String[]{firstName, lastName, phone, email, dob, group};
     }
 
-    private void inValidHandle(AddUpdateContactController addController) {
+    private void blankInValidHandle(AddUpdateContactController addController) {
         if (addController.getFirstNameField().getText().isBlank()){
-            addController.getFirstNameField().setStyle("-fx-text-box-border: #B22222;");
+            addController.fieldInvalidHandle(addController.getFirstNameField());
         }
         if (addController.getLastNameField().getText().isBlank()) {
-            addController.getLastNameField().setStyle("-fx-text-box-border: #B22222;");
+            addController.fieldInvalidHandle(addController.getLastNameField());
         }
         if (addController.getPhoneField().getText().isBlank()) {
-            addController.getPhoneField().setStyle("-fx-text-box-border: #B22222;");
+            addController.fieldInvalidHandle(addController.getPhoneField());
         }
         if (addController.getEmailField().getText().isBlank()) {
-            addController.getEmailField().setStyle("-fx-text-box-border: #B22222;");
+            addController.fieldInvalidHandle(addController.getEmailField());
         }
         if (addController.getBirthdayPicker().getValue() == null) {
-            addController.getBirthdayPicker().setStyle("-fx-border-color: #B22222;");
+            addController.fieldInvalidHandle(addController.getBirthdayPicker());
         }
         if (addController.getGroupCombo().getValue() == null) {
-            addController.getGroupCombo().setStyle("-fx-border-color: #B22222;");
+            addController.fieldInvalidHandle(addController.getGroupCombo());
         }
         addController.blankFieldsExistHandle();
     }

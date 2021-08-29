@@ -6,12 +6,9 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 
 import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
@@ -37,6 +34,10 @@ public class AddUpdateContactController {
 
     static ObservableList<Contact> contacts;
     static ObservableList<Group> groups = GroupController.groups;
+
+    private static boolean emailFailureFlag;
+    private static boolean phoneFailureFlag;
+    private static boolean blankFieldFailureFlag;
 
     static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
@@ -82,12 +83,13 @@ public class AddUpdateContactController {
     @FXML
     void initialize() {
         groupCombo.setItems(groups);
+        resetAllFailureFlag();
 
         firstNameField.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
                 if (aBoolean && !firstNameField.getText().isBlank()) {
-                    blankFieldsFilledHandler(firstNameField);
+                    fieldValidHandler(firstNameField);
                 }
             }
         });
@@ -96,7 +98,7 @@ public class AddUpdateContactController {
             @Override
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
                 if (aBoolean && !lastNameField.getText().isBlank()) {
-                    blankFieldsFilledHandler(lastNameField);
+                    fieldValidHandler(lastNameField);
                 }
             }
         });
@@ -104,8 +106,8 @@ public class AddUpdateContactController {
         phoneField.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
-                if (aBoolean) {
-                    blankFieldsFilledHandler(phoneField);
+                if (aBoolean && phoneField.getText().isBlank() && checkPhoneFieldValidation(phoneField)) {
+                    fieldValidHandler(phoneField);
                 }
             }
         });
@@ -114,7 +116,7 @@ public class AddUpdateContactController {
             @Override
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
                 if (aBoolean && !emailField.getText().isBlank()) {
-                    blankFieldsFilledHandler(emailField);
+                    fieldValidHandler(emailField);
                 }
             }
         });
@@ -123,7 +125,7 @@ public class AddUpdateContactController {
             @Override
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
                 if (aBoolean && birthdayPicker.getValue() != null) {
-                    blankFieldsFilledHandler(birthdayPicker);
+                    fieldValidHandler(birthdayPicker);
                 }
             }
         });
@@ -132,16 +134,25 @@ public class AddUpdateContactController {
             @Override
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
                 if (aBoolean && groupCombo.getValue() != null) {
-                    blankFieldsFilledHandler(groupCombo);
+                    fieldValidHandler(groupCombo);
                 }
             }
         });
     }
 
+    private void resetAllFailureFlag() {
+        blankFieldFailureFlag = false;
+        emailFailureFlag = false;
+        phoneFailureFlag = false;
+    }
+
     public void blankFieldsExistHandle() {
-        Label message = new Label("* Please fill value to empty field(s)");
-        message.setTextFill(Color.BROWN);
-        vbox.getChildren().add(message);
+        if (!blankFieldFailureFlag) {
+            Label message = new Label("* Please fill value to empty field(s)");
+            message.setTextFill(Color.BROWN);
+            vbox.getChildren().add(message);
+            blankFieldFailureFlag = true;
+        }
     }
 
     public boolean checkPhoneFieldValidation(TextField phoneField) {
@@ -151,15 +162,29 @@ public class AddUpdateContactController {
     }
 
     public void phoneFieldValidationHandle() {
-        Label message = new Label("* Phone field accepts only 10 digits input value");
-        message.setTextFill(Color.BROWN);
-        vbox.getChildren().add(message);
+        if (!phoneFailureFlag) {
+            Label message = new Label("* Phone field accepts only 10 digits input value");
+            message.setTextFill(Color.BROWN);
+            vbox.getChildren().add(message);
+            phoneFailureFlag = true;
+        }
     }
 
     public boolean checkEmailFieldValidation(TextField emailField) {
         String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
         return emailField.getText().matches(regex);
     }
+
+    public void emailFieldValidationHandle() {
+        if (!emailFailureFlag) {
+            Label message = new Label("* The email address is not valid");
+            message.setTextFill(Color.BROWN);
+            vbox.getChildren().add(message);
+            emailFailureFlag = true;
+        }
+    }
+
+
 
     private void addContact(Contact contact) {
         try {
@@ -210,8 +235,12 @@ public class AddUpdateContactController {
         return "All fields are filled";
     }
 
-    public void blankFieldsFilledHandler(Control control) {
+    public void fieldValidHandler(Control control) {
         control.setStyle("-fx-border-color: grey;");
+    }
+
+    public void fieldInvalidHandle(Control control) {
+        control.setStyle("-fx-border-color: #B22222;");
     }
 
     public void updateContact(Contact contact) {
@@ -222,5 +251,6 @@ public class AddUpdateContactController {
         birthdayPicker.setValue(contact.getDob());
         groupCombo.setValue(contact.getGroup());
     }
+
 
 }
