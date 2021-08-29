@@ -53,7 +53,7 @@ public class ContactController {
         dialog.initOwner(mainPanel.getScene().getWindow());
         dialog.setTitle("Add new contact");
         FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(Main.class.getResource("addContact.fxml"));
+        fxmlLoader.setLocation(Main.class.getResource("addUpdateContact.fxml"));
         try {
             dialog.getDialogPane().setContent(fxmlLoader.load());
         } catch (IOException e) {
@@ -112,7 +112,7 @@ public class ContactController {
         dialog.initOwner(mainPanel.getScene().getWindow());
         dialog.setTitle("Update a contact");
         FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(Main.class.getResource("addContact.fxml"));
+        fxmlLoader.setLocation(Main.class.getResource("addUpdateContact.fxml"));
         try {
             dialog.getDialogPane().setContent(fxmlLoader.load());
         } catch (IOException e) {
