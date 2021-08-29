@@ -92,10 +92,6 @@ public class ContactController {
                 // Save to file
                 ContactDAO.saveContactsToFile();
             }
-//            else {
-//                inValidHandle(addController);
-//                System.out.println("Not all field blank");
-//            }
         }
     }
 

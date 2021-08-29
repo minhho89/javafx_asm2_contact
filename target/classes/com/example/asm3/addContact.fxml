@@ -14,6 +14,7 @@
     <content>
         <VBox spacing="10">
         <GridPane vgap="10" hgap="10">
+
             <Label text="First Name" GridPane.rowIndex="0" GridPane.columnIndex="0" prefWidth="100.0"/>
             <TextField fx:id="firstNameField" GridPane.rowIndex="0" GridPane.columnIndex="1" prefWidth="150.0"/>
 
@@ -33,8 +34,9 @@
             <ComboBox fx:id="groupCombo" GridPane.rowIndex="5" GridPane.columnIndex="1" prefWidth="150.0"/>
 
         </GridPane>
-            <Label fx:id="messageLabel" text="* Please fill the empty field(s)"
-                   textFill="brown"/>
+
+            <Label fx:id="messageLabel" text="* Please fill the empty field(s)" textFill="brown"/>
+            
         </VBox>
     </content>
 </DialogPane>
