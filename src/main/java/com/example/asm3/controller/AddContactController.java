@@ -2,9 +2,12 @@ package com.example.asm3.controller;
 
 import com.example.asm3.entity.Contact;
 import com.example.asm3.entity.Group;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Control;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 
@@ -33,62 +36,29 @@ public class AddContactController {
         contacts = ContactController.contacts;
     }
 
-//    private static AddContactController instance;
-//
-//    public static AddContactController getInstance() {
-//        if (instance == null) {
-//            instance = new AddContactController();
-//        }
-//        return instance;
-//    }
-
 
     public TextField getFirstNameField() {
         return firstNameField;
-    }
-
-    public void setFirstNameField(TextField firstNameField) {
-        this.firstNameField = firstNameField;
     }
 
     public TextField getLastNameField() {
         return lastNameField;
     }
 
-    public void setLastNameField(TextField lastNameField) {
-        this.lastNameField = lastNameField;
-    }
-
     public TextField getPhoneField() {
         return phoneField;
-    }
-
-    public void setPhoneField(TextField phoneField) {
-        this.phoneField = phoneField;
     }
 
     public TextField getEmailField() {
         return emailField;
     }
 
-    public void setEmailField(TextField emailField) {
-        this.emailField = emailField;
-    }
-
     public DatePicker getBirthdayPicker() {
         return birthdayPicker;
     }
 
-    public void setBirthdayPicker(DatePicker birthdayPicker) {
-        this.birthdayPicker = birthdayPicker;
-    }
-
     public ComboBox<Group> getGroupCombo() {
         return groupCombo;
-    }
-
-    public void setGroupCombo(ComboBox<Group> groupCombo) {
-        this.groupCombo = groupCombo;
     }
 
     public static DateTimeFormatter getFormatter() {
@@ -98,6 +68,60 @@ public class AddContactController {
     @FXML
     void initialize() {
         groupCombo.setItems(groups);
+
+        firstNameField.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
+                if (aBoolean && !firstNameField.getText().isBlank()) {
+                    blankFieldsFilledHandler(firstNameField);
+                }
+            }
+        });
+
+        lastNameField.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
+                if (aBoolean && !lastNameField.getText().isBlank()) {
+                    blankFieldsFilledHandler(lastNameField);
+                }
+            }
+        });
+
+        phoneField.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
+                if (aBoolean && !phoneField.getText().isBlank()) {
+                    blankFieldsFilledHandler(phoneField);
+                }
+            }
+        });
+
+        emailField.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
+                if (aBoolean && !emailField.getText().isBlank()) {
+                    blankFieldsFilledHandler(emailField);
+                }
+            }
+        });
+
+        birthdayPicker.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
+                if (aBoolean && birthdayPicker.getValue() != null) {
+                    blankFieldsFilledHandler(birthdayPicker);
+                }
+            }
+        });
+
+        groupCombo.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
+                if (aBoolean && groupCombo.getValue() != null) {
+                    blankFieldsFilledHandler(groupCombo);
+                }
+            }
+        });
     }
 
     private void addContact(Contact contact) {
@@ -106,6 +130,7 @@ public class AddContactController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     public Contact getNewContact() {
@@ -146,5 +171,9 @@ public class AddContactController {
         if (groupCombo.getValue().toString().isBlank()) return "Group Selection Field";
 
         return "All fields are filled";
+    }
+
+    public void blankFieldsFilledHandler(Control control) {
+        control.setStyle("-fx-border-color: grey;");
     }
 }
