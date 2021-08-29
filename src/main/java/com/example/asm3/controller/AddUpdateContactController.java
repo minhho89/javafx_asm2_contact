@@ -8,6 +8,10 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
@@ -27,9 +31,9 @@ public class AddUpdateContactController {
     @FXML
     private ComboBox<Group> groupCombo;
     @FXML
-    private Label messageLabel;
+    private VBox vbox;
     @FXML
-    private Label messageLabel2;
+    private DialogPane dialogPane;
 
     static ObservableList<Contact> contacts;
     static ObservableList<Group> groups = GroupController.groups;
@@ -40,9 +44,6 @@ public class AddUpdateContactController {
         contacts = ContactController.contacts;
     }
 
-    public Label getMessageLabel() {
-        return messageLabel;
-    }
 
     public TextField getFirstNameField() {
         return firstNameField;
@@ -68,15 +69,19 @@ public class AddUpdateContactController {
         return groupCombo;
     }
 
+    public DialogPane getDialogPane() { return dialogPane;}
+
     public static DateTimeFormatter getFormatter() {
         return FORMATTER;
+    }
+
+    public VBox getVBox() {
+        return vbox;
     }
 
     @FXML
     void initialize() {
         groupCombo.setItems(groups);
-        messageLabel.setVisible(false);
-        messageLabel2.setVisible(false);
 
         firstNameField.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
@@ -100,13 +105,7 @@ public class AddUpdateContactController {
             @Override
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
                 if (aBoolean) {
-                    if (!phoneField.getText().isBlank()) {
-                        blankFieldsFilledHandler(phoneField);
-                    } else {
-                        if (checkPhoneFieldValidation(phoneField)) {
-
-                        };
-                    }
+                    blankFieldsFilledHandler(phoneField);
                 }
             }
         });
@@ -139,6 +138,12 @@ public class AddUpdateContactController {
         });
     }
 
+    public void blankFieldsExistHandle() {
+        Label message = new Label("* Please fill value to empty field(s)");
+        message.setTextFill(Color.BROWN);
+        vbox.getChildren().add(message);
+    }
+
     public boolean checkPhoneFieldValidation(TextField phoneField) {
         Pattern pattern = Pattern.compile("^\\d{10}$");
         Matcher matcher = pattern.matcher(phoneField.getText());
@@ -146,14 +151,14 @@ public class AddUpdateContactController {
     }
 
     public void phoneFieldValidationHandle() {
-        messageLabel2.setVisible(true);
-        messageLabel2.setText("* Phone field accepts only 10 digits input value");
+        Label message = new Label("* Phone field accepts only 10 digits input value");
+        message.setTextFill(Color.BROWN);
+        vbox.getChildren().add(message);
     }
 
     public boolean checkEmailFieldValidation(TextField emailField) {
-        Pattern pattern = Pattern.compile("^\\d{10}$");
-        Matcher matcher = pattern.matcher(phoneField.getText());
-        return matcher.matches();
+        String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
+        return emailField.getText().matches(regex);
     }
 
     private void addContact(Contact contact) {
@@ -217,4 +222,5 @@ public class AddUpdateContactController {
         birthdayPicker.setValue(contact.getDob());
         groupCombo.setValue(contact.getGroup());
     }
+
 }

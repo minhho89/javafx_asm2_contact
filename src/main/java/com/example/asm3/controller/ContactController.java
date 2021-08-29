@@ -84,6 +84,7 @@ public class ContactController {
                 System.out.println("phone field handle");
                 addController.phoneFieldValidationHandle();
             }
+            addController.getDialogPane().getScene().getWindow().sizeToScene(); // resize the dialog when children added
         });
 
         Optional<ButtonType> result = dialog.showAndWait();
@@ -252,7 +253,7 @@ public class ContactController {
         if (addController.getGroupCombo().getValue() == null) {
             addController.getGroupCombo().setStyle("-fx-border-color: #B22222;");
         }
-        addController.getMessageLabel().setVisible(true);
+        addController.blankFieldsExistHandle();
     }
 
     private void fillTempInputValue(String[] inputValue, AddUpdateContactController addController) {

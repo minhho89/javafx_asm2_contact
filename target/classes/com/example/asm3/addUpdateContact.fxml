@@ -3,7 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<DialogPane xmlns:fx="http://javafx.com/fxml"
+<DialogPane fx:id="dialogPane" xmlns:fx="http://javafx.com/fxml"
             xmlns="http://javafx.com/javafx" fx:controller="com.example.asm3.controller.AddUpdateContactController">
     <padding>
         <Insets top="10" left="10" right="10" bottom="10"/>
@@ -12,31 +12,28 @@
         Add new contact
     </headerText>
     <content>
-        <VBox spacing="10">
-        <GridPane vgap="10" hgap="10">
+        <VBox fx:id="vbox" spacing="10">
+            <GridPane vgap="10" hgap="10">
 
-            <Label text="First Name" GridPane.rowIndex="0" GridPane.columnIndex="0" prefWidth="100.0"/>
-            <TextField fx:id="firstNameField" GridPane.rowIndex="0" GridPane.columnIndex="1" prefWidth="150.0"/>
+                <Label text="First Name" GridPane.rowIndex="0" GridPane.columnIndex="0" prefWidth="100.0"/>
+                <TextField fx:id="firstNameField" GridPane.rowIndex="0" GridPane.columnIndex="1" prefWidth="150.0"/>
 
-            <Label text="Last Name" GridPane.rowIndex="1" GridPane.columnIndex="0" prefWidth="100.0"/>
-            <TextField fx:id="lastNameField" GridPane.rowIndex="1" GridPane.columnIndex="1" prefWidth="150.0"/>
+                <Label text="Last Name" GridPane.rowIndex="1" GridPane.columnIndex="0" prefWidth="100.0"/>
+                <TextField fx:id="lastNameField" GridPane.rowIndex="1" GridPane.columnIndex="1" prefWidth="150.0"/>
 
-            <Label text="Phone" GridPane.rowIndex="2" GridPane.columnIndex="0" prefWidth="100.0"/>
-            <TextField fx:id="phoneField" GridPane.rowIndex="2" GridPane.columnIndex="1" prefWidth="150.0"/>
+                <Label text="Phone" GridPane.rowIndex="2" GridPane.columnIndex="0" prefWidth="100.0"/>
+                <TextField fx:id="phoneField" GridPane.rowIndex="2" GridPane.columnIndex="1" prefWidth="150.0"/>
 
-            <Label text="Email" GridPane.rowIndex="3" GridPane.columnIndex="0" prefWidth="100.0"/>
-            <TextField fx:id="emailField" GridPane.rowIndex="3" GridPane.columnIndex="1" prefWidth="150.0"/>
+                <Label text="Email" GridPane.rowIndex="3" GridPane.columnIndex="0" prefWidth="100.0"/>
+                <TextField fx:id="emailField" GridPane.rowIndex="3" GridPane.columnIndex="1" prefWidth="150.0"/>
 
-            <Label text="Birthday" GridPane.rowIndex="4" GridPane.columnIndex="0" prefWidth="100.0"/>
-            <DatePicker fx:id="birthdayPicker" GridPane.rowIndex="4" GridPane.columnIndex="1" prefWidth="150.0"/>
+                <Label text="Birthday" GridPane.rowIndex="4" GridPane.columnIndex="0" prefWidth="100.0"/>
+                <DatePicker fx:id="birthdayPicker" GridPane.rowIndex="4" GridPane.columnIndex="1" prefWidth="150.0"/>
 
-            <Label text="Group" GridPane.rowIndex="5" GridPane.columnIndex="0" prefWidth="100.0"/>
-            <ComboBox fx:id="groupCombo" GridPane.rowIndex="5" GridPane.columnIndex="1" prefWidth="150.0"/>
+                <Label text="Group" GridPane.rowIndex="5" GridPane.columnIndex="0" prefWidth="100.0"/>
+                <ComboBox fx:id="groupCombo" GridPane.rowIndex="5" GridPane.columnIndex="1" prefWidth="150.0"/>
 
-        </GridPane>
-
-            <Label fx:id="messageLabel" text="* Please fill the empty field(s)" textFill="brown"/>
-            <Label fx:id="messageLabel2" text="" textFill="brown"/>
+            </GridPane>
 
         </VBox>
     </content>
