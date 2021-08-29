@@ -129,9 +129,24 @@ public class ContactController {
     }
 
     private void inValidHandle(AddContactController addController) {
-        if (addController.getFirstNameField().getText().isBlank())
-            System.out.println("empty");
-            addController.getFirstNameField().setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");
+        if (addController.getFirstNameField().getText().isBlank()){
+            addController.getFirstNameField().setStyle("-fx-text-box-border: #B22222;");
+        }
+        if (addController.getLastNameField().getText().isBlank()) {
+            addController.getLastNameField().setStyle("-fx-text-box-border: #B22222;");
+        }
+        if (addController.getPhoneField().getText().isBlank()) {
+            addController.getPhoneField().setStyle("-fx-text-box-border: #B22222;");
+        }
+        if (addController.getEmailField().getText().isBlank()) {
+            addController.getEmailField().setStyle("-fx-text-box-border: #B22222;");
+        }
+        if (addController.getBirthdayPicker().getValue() == null) {
+            addController.getBirthdayPicker().setStyle("-fx-border-color: #B22222;");
+        }
+        if (addController.getGroupCombo().getValue() == null) {
+            addController.getGroupCombo().setStyle("-fx-border-color: #B22222;");
+        }
     }
 
     private void fillTempInputValue(String[] inputValue, AddContactController addController) {
