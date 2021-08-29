@@ -10,7 +10,7 @@ import javafx.scene.control.*;
 
 import java.time.format.DateTimeFormatter;
 
-public class AddContactController {
+public class AddUpdateContactController {
     @FXML
     private TextField firstNameField;
     @FXML
@@ -31,7 +31,7 @@ public class AddContactController {
 
     static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
-    public AddContactController() {
+    public AddUpdateContactController() {
         contacts = ContactController.contacts;
     }
 
