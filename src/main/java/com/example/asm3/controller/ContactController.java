@@ -4,7 +4,6 @@ import com.example.asm3.Main;
 import com.example.asm3.dao.ContactDAO;
 import com.example.asm3.entity.Contact;
 import com.example.asm3.entity.Group;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,7 +17,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 public class ContactController {
@@ -70,10 +68,8 @@ public class ContactController {
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
 
         final Button btSave = (Button) dialog.getDialogPane().lookupButton(saveButtonType);
-        System.out.println(btSave);
 
         AddContactController addController = fxmlLoader.getController();
-        System.out.println(addController);
 
         // Handle input validation
         btSave.addEventFilter(ActionEvent.ACTION, event -> {
@@ -87,7 +83,7 @@ public class ContactController {
         if (result.isPresent() && result.get() == saveButtonType) {
 //             Check if any fields empty
             if (!addController.areAllFieldsBlank()) {
-                Contact newContact = addController.getNewContact();
+                Contact newContact = addController.getInputContact();
                 contacts.add(newContact);
                 // Save to file
                 ContactDAO.saveContactsToFile();
@@ -95,70 +91,13 @@ public class ContactController {
         }
     }
 
-    /**
-     * Temporally saves fields input value into a String array
-     * Unfilled value will be left to null
-     * @param addController
-     * @return result array
-     */
-    private String[] saveTempInputValue(AddContactController addController) {
-        String firstName = null;
-        String lastName = null;
-        String phone = null;
-        String email = null;
-        String dob = null;
-        String group = null;
-        String s = (!addController.getFirstNameField().getText().isBlank()) ?
-                firstName = addController.getFirstNameField().getText() : null;
-        s = (!addController.getLastNameField().getText().isBlank())?
-            lastName = addController.getLastNameField().getText() : null;
-        s = (!addController.getPhoneField().getText().isBlank())?
-            phone = addController.getPhoneField().getText() : null;
-        s = (!addController.getEmailField().getText().isBlank())?
-            email = addController.getEmailField().getText() : null;
-        s =(addController.getBirthdayPicker().getValue() != null)?
-            dob = addController.getBirthdayPicker().getValue().toString() : null;
-        s = (addController.getGroupCombo().getValue() != null)?
-            group = addController.getGroupCombo().getValue().toString() : null;
-
-        return new String[]{firstName, lastName, phone, email, dob, group};
-    }
-
-    private void inValidHandle(AddContactController addController) {
-        if (addController.getFirstNameField().getText().isBlank()){
-            addController.getFirstNameField().setStyle("-fx-text-box-border: #B22222;");
-        }
-        if (addController.getLastNameField().getText().isBlank()) {
-            addController.getLastNameField().setStyle("-fx-text-box-border: #B22222;");
-        }
-        if (addController.getPhoneField().getText().isBlank()) {
-            addController.getPhoneField().setStyle("-fx-text-box-border: #B22222;");
-        }
-        if (addController.getEmailField().getText().isBlank()) {
-            addController.getEmailField().setStyle("-fx-text-box-border: #B22222;");
-        }
-        if (addController.getBirthdayPicker().getValue() == null) {
-            addController.getBirthdayPicker().setStyle("-fx-border-color: #B22222;");
-        }
-        if (addController.getGroupCombo().getValue() == null) {
-            addController.getGroupCombo().setStyle("-fx-border-color: #B22222;");
-        }
-        addController.getMessageLabel().setVisible(true);
-    }
-
-    private void fillTempInputValue(String[] inputValue, AddContactController addController) {
-        addController.getFirstNameField().setText(inputValue[0]);
-        addController.getLastNameField().setText(inputValue[1]);
-        addController.getPhoneField().setText(inputValue[2]);
-        addController.getEmailField().setText(inputValue[3]);
-        addController.getBirthdayPicker().setValue(LocalDate.parse(inputValue[4],addController.getFormatter()));
-    }
-
     //update a contact
     @FXML
-    public void showUpdateContactDialog() {
+    public void showUpdateContactDialog() throws IOException {
         // get selected contact
         Contact selectedContact = contactsTable.getSelectionModel().getSelectedItem();
+
+        // If no contact selected then inform user
         if (selectedContact == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("No contact selected!");
@@ -168,30 +107,49 @@ public class ContactController {
             return;
         }
 
+        // If contact selected, open dialog
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.initOwner(mainPanel.getScene().getWindow());
         dialog.setTitle("Update a contact");
         FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(Main.class.getResource("updateContact.fxml"));
+        fxmlLoader.setLocation(Main.class.getResource("addContact.fxml"));
         try {
             dialog.getDialogPane().setContent(fxmlLoader.load());
         } catch (IOException e) {
             e.printStackTrace();
             return;
         }
-        ButtonType saveButton = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().add(saveButton);
+        ButtonType saveButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().add(saveButtonType);
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
 
-        UpdateContactController controller = fxmlLoader.getController();
-        controller.updateContact(selectedContact);
+        final Button btSave = (Button) dialog.getDialogPane().lookupButton(saveButtonType);
+
+        AddContactController updateController = fxmlLoader.getController();
+        updateController.updateContact(selectedContact);
+
+        // Handle input validation
+        btSave.addEventFilter(ActionEvent.ACTION, event -> {
+            if (updateController.areAllFieldsBlank()) {
+                event.consume();
+                inValidHandle(updateController);
+            }
+        });
 
         Optional<ButtonType> result = dialog.showAndWait();
-        if (result.isPresent() && result.get() == saveButton) {
-            // Handle Save
+        if (result.isPresent() && result.get() == saveButtonType) {
+            //Check if any fields empty
+            if (!updateController.areAllFieldsBlank()) {
+                // Get selected contact
+                int index = contacts.indexOf(selectedContact);
+                Contact updatedContact = updateController.getInputContact();
+                contacts.set(index, updatedContact);
+                System.out.println(selectedContact);
+                // Save to file
+                ContactDAO.saveContactsToFile();
+            }
 
         }
-
     }
 
     //delete a selected contact
@@ -237,4 +195,62 @@ public class ContactController {
         }
     }
 
+    /**
+     * Temporally saves fields input value into a String array
+     * Unfilled value will be left to null
+     * @param addController
+     * @return result array
+     */
+    private String[] saveTempInputValue(AddContactController addController) {
+        String firstName = null;
+        String lastName = null;
+        String phone = null;
+        String email = null;
+        String dob = null;
+        String group = null;
+        String s = (!addController.getFirstNameField().getText().isBlank()) ?
+                firstName = addController.getFirstNameField().getText() : null;
+        s = (!addController.getLastNameField().getText().isBlank())?
+                lastName = addController.getLastNameField().getText() : null;
+        s = (!addController.getPhoneField().getText().isBlank())?
+                phone = addController.getPhoneField().getText() : null;
+        s = (!addController.getEmailField().getText().isBlank())?
+                email = addController.getEmailField().getText() : null;
+        s =(addController.getBirthdayPicker().getValue() != null)?
+                dob = addController.getBirthdayPicker().getValue().toString() : null;
+        s = (addController.getGroupCombo().getValue() != null)?
+                group = addController.getGroupCombo().getValue().toString() : null;
+
+        return new String[]{firstName, lastName, phone, email, dob, group};
+    }
+
+    private void inValidHandle(AddContactController addController) {
+        if (addController.getFirstNameField().getText().isBlank()){
+            addController.getFirstNameField().setStyle("-fx-text-box-border: #B22222;");
+        }
+        if (addController.getLastNameField().getText().isBlank()) {
+            addController.getLastNameField().setStyle("-fx-text-box-border: #B22222;");
+        }
+        if (addController.getPhoneField().getText().isBlank()) {
+            addController.getPhoneField().setStyle("-fx-text-box-border: #B22222;");
+        }
+        if (addController.getEmailField().getText().isBlank()) {
+            addController.getEmailField().setStyle("-fx-text-box-border: #B22222;");
+        }
+        if (addController.getBirthdayPicker().getValue() == null) {
+            addController.getBirthdayPicker().setStyle("-fx-border-color: #B22222;");
+        }
+        if (addController.getGroupCombo().getValue() == null) {
+            addController.getGroupCombo().setStyle("-fx-border-color: #B22222;");
+        }
+        addController.getMessageLabel().setVisible(true);
+    }
+
+    private void fillTempInputValue(String[] inputValue, AddContactController addController) {
+        addController.getFirstNameField().setText(inputValue[0]);
+        addController.getLastNameField().setText(inputValue[1]);
+        addController.getPhoneField().setText(inputValue[2]);
+        addController.getEmailField().setText(inputValue[3]);
+        addController.getBirthdayPicker().setValue(LocalDate.parse(inputValue[4],addController.getFormatter()));
+    }
 }

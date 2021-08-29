@@ -136,7 +136,7 @@ public class AddContactController {
 
     }
 
-    public Contact getNewContact() {
+    public Contact getInputContact() {
         Contact contact = new Contact();
         contact.setFirstName(firstNameField.getText());
         contact.setLastName(lastNameField.getText());
@@ -178,5 +178,14 @@ public class AddContactController {
 
     public void blankFieldsFilledHandler(Control control) {
         control.setStyle("-fx-border-color: grey;");
+    }
+
+    public void updateContact(Contact contact) {
+        firstNameField.setText(contact.getFirstName());
+        lastNameField.setText(contact.getLastName());
+        phoneField.setText(contact.getPhone());
+        emailField.setText(contact.getEmail());
+        birthdayPicker.setValue(contact.getDob());
+        groupCombo.setValue(contact.getGroup());
     }
 }
