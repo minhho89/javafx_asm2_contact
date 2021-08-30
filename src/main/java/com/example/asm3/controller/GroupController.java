@@ -15,23 +15,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.Locale;
 import java.util.Optional;
 
-
 public class GroupController {
-
-    @FXML
-    private BorderPane mainPanel;
-
-    @FXML
-    private ListView<Group> groupListView;
-
-    @FXML
-    private TextField searchField;
-
-    @FXML
-    private TextField groupNameField;
 
     public static ObservableList<Group> groups;
     public static ObservableList<Group> searchGroups;
@@ -45,6 +31,32 @@ public class GroupController {
     }
 
     @FXML
+    private BorderPane mainPanel;
+    @FXML
+    private ListView<Group> groupListView;
+    @FXML
+    private TextField searchField;
+    @FXML
+    private TextField groupNameField;
+
+    /**
+     * Find index of a group in groupList by the group name
+     *
+     * @param groupName
+     * @return -1 if not found
+     */
+    public static int findIndexByGroupName(String groupName) {
+        int i = 0;
+        for (Group group : groups) {
+            if (groupName.equalsIgnoreCase(group.getName())) {
+                return i;
+            }
+            i++;
+        }
+        return -1;
+    }
+
+    @FXML
     void initialize() {
         try {
             // Load group items from file
@@ -54,6 +66,11 @@ public class GroupController {
         }
     }
 
+    /**
+     * Get selected group in list view
+     *
+     * @return selectedGroup
+     */
     public Group selectedGroup() {
         Group selectedGroup = groupListView.getSelectionModel().getSelectedItem();
         return selectedGroup;
@@ -72,7 +89,12 @@ public class GroupController {
         thisStage.close();
     }
 
-    // TODO: move to DAO
+    /**
+     * Search groups by group name.
+     * Searching matching name.
+     *
+     * @param groupName
+     */
     // Search using linear algorithm
     public void search(String groupName) {
         searchGroups.removeAll();
@@ -82,7 +104,6 @@ public class GroupController {
                 searchGroups.add(group);
             }
         }
-
     }
 
     @FXML
@@ -103,10 +124,8 @@ public class GroupController {
                 alert.showAndWait();
             }
         } else {
-//            groupListView.setItems(groups);
             nameFieldBlankAlert();
         }
-
     }
 
     // Add new Group items to group
@@ -140,6 +159,9 @@ public class GroupController {
         }
     }
 
+    /**
+     * Showing alert if name field is blank
+     */
     private void nameFieldBlankAlert() {
         Alert a = new Alert((Alert.AlertType.ERROR));
         a.setTitle("Cannot perform task");
@@ -162,7 +184,7 @@ public class GroupController {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Cannot perform task");
                     alert.setHeaderText(null);
-                    alert.setContentText("The group name \"" + newName +  "\" is already exists. Please choose another name.");
+                    alert.setContentText("The group name \"" + newName + "\" is already exists. Please choose another name.");
                     alert.showAndWait();
                     return;
                 }
@@ -178,7 +200,7 @@ public class GroupController {
 
                     ObservableList<Contact> contacts = ContactController.getContacts();
 
-                    for(Contact contact : contacts) {
+                    for (Contact contact : contacts) {
                         if (contact.getGroup().getName().equalsIgnoreCase(oldName))
                             contact.getGroup().setName(newName);
                     }
@@ -200,8 +222,6 @@ public class GroupController {
             nameFieldBlankAlert();
         }
     }
-
-    //delete a group, delete failed if there are some contact is in deleted one
 
     @FXML
     public void deleteAction() throws IOException {
@@ -229,34 +249,20 @@ public class GroupController {
 
     }
 
-    private boolean isBelongsToGroups(Group checkingGroup) {
-        if (ContactDAO.getContacts() != null) {
-            for (Contact contact : ContactDAO.getContacts()) {
-                if (contact.getGroup().equals(checkingGroup)) return true;
-            }
-        }
-        return false;
-    }
-
+    /**
+     * Check if a group belong to the groupList
+     * Checking by groupName
+     *
+     * @param groupName confirmation group name
+     * @return true if found
+     */
     private boolean isBelongsToGroups(String groupName) {
         if (groups != null) {
             for (Group group : groups) {
-                if(group.getName().equalsIgnoreCase(groupName))
+                if (group.getName().equalsIgnoreCase(groupName))
                     return true;
             }
         }
         return false;
     }
-
-    public static int findIndexByGroupName(String groupName) {
-        int i = 0;
-        for (Group group : groups) {
-            if (groupName.equalsIgnoreCase(group.getName())) {
-                return i;
-            }
-            i++;
-        }
-        return -1;
-    }
-
 }

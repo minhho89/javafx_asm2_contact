@@ -9,9 +9,7 @@ import javafx.collections.ObservableList;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Scanner;
-
 
 public class ContactDAO {
 
@@ -30,24 +28,26 @@ public class ContactDAO {
         }
     }
 
-    public static ObservableList<Contact> getContacts() {
-        return contacts;
-    }
-
+    /**
+     * Load contact from file
+     * Using delimiter ",,,"
+     *
+     * @return list of contacts
+     * @throws IOException
+     */
     public static ObservableList<Contact> loadContacts() throws IOException {
         contacts = FXCollections.observableArrayList();
         Scanner sc = null;
-
         try {
             sc = new Scanner(new FileReader(PATH));
             sc.useDelimiter(",,,");
-            while(sc.hasNextLine()){
+            while (sc.hasNextLine()) {
                 sc.skip(sc.delimiter());
                 String firstName = sc.next().trim();
                 String lastName = sc.next();
                 String phone = sc.next();
                 String email = sc.next();
-                LocalDate dob =  LocalDate.parse(sc.next(), FORMATTER);
+                LocalDate dob = LocalDate.parse(sc.next(), FORMATTER);
                 String groupName = sc.next().trim();
                 int index = GroupController.findIndexByGroupName(groupName);
                 Contact contact = new Contact();
@@ -58,29 +58,26 @@ public class ContactDAO {
                     contact = new Contact(firstName, lastName, phone, email, dob);
                 }
                 contacts.add(contact);
-
-//                 FOR DEBUG
-//                System.out.println("FirstName " + sc.next().trim());
-//                System.out.println("LastName " + sc.next());
-//                System.out.println("phone " + sc.next());
-//                System.out.println("Email " + sc.next());
-//                System.out.println("Dob " + sc.next());
-//                System.out.println("Group " + sc.next());
-//                System.out.println("-----------------");
             }
         } finally {
-          sc.close();
+            sc.close();
         }
         return contacts;
     }
 
+    /**
+     * Save contacts to file
+     * Using delimiter ",,,"
+     *
+     * @throws IOException
+     */
     public static void saveContactsToFile() throws IOException {
         Writer wr = null;
         String firstName, lastName, phone, email, dob, group;
         StringBuilder result;
         try {
             wr = new FileWriter(FILE);
-            for(Contact contact : contacts) {
+            for (Contact contact : contacts) {
                 firstName = contact.getFirstName();
                 lastName = contact.getLastName();
                 phone = contact.getPhone();

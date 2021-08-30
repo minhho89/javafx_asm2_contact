@@ -1,6 +1,6 @@
-,,,James,,,Bond,,,0897878,,,jams@fdd,,,2021/08/18,,,Friends
-,,,Black,,,Jack,,,997878,,,sdfs@dsdfg.com,,,2021/08/09,,,Friends
-,,,Tim,,,Smith,,,9898986787432,,,smith@wil.com,,,2021/08/09,,,Friends
-,,,Steves,,,Jobs,,,089877,,,steves@apple.com,,,2021/08/09,,,Friends
-,,,Lucky,,,Luckes,,,98894,,,luck@gmail.com,,,2021/08/23,,,Friends
-,,,James,,,Smith,,,9878744345,,,jm@gmail.com,,,2021/08/09,,,Friends
+,,,James,,,Bond,,,0897878,,,jams@fdd,,,1999/08/18,,,Friends
+,,,Tim,,,Smith,,,9898986787432,,,smith@wil.com,,,1992/08/09,,,Friends
+,,,Steves,,,Jobs,,,089877,,,steves@apple.com,,,1998/08/09,,,Friends
+,,,James,,,Smiths,,,9878744345,,,jm@gmail.com,,,1988/08/09,,,Friends
+,,,Soichiro,,,Tanaka,,,0903456981,,,tanaka@gmail.com,,,1987/12/03,,,Family
+,,,Tuan,,,Nguyen,,,8739073981,,,tuannguyen@yahoo.com,,,2021/04/13,,,Family
