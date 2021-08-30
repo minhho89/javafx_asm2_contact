@@ -1,5 +1,6 @@
 package com.example.asm3.controller;
 
+import com.example.asm3.dao.ContactDAO;
 import com.example.asm3.dao.GroupDAO;
 import com.example.asm3.entity.Contact;
 import com.example.asm3.entity.Group;
@@ -31,12 +32,13 @@ public class GroupController {
     @FXML
     private TextField groupNameField;
 
-    public static ObservableList<Group> groups;
+    public static ObservableList<Group> groups = FXCollections.observableArrayList();
     public static ObservableList<Group> searchGroups;
-    static ObservableList<Contact> contacts;
+    static ObservableList<Contact> contacts = FXCollections.observableArrayList();
 
     static {
         try {
+            contacts = ContactDAO.loadContacts();
             groups = GroupDAO.loadGroup();
         } catch (IOException e) {
             e.printStackTrace();
@@ -183,14 +185,20 @@ public class GroupController {
             // delete
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Confirmation");
-            alert.setHeaderText("Confirmation");
-            alert.setContentText("Do you want to delete selected group");
+            alert.setHeaderText("Do you want to delete this group \"" + selectedItem + "\"");
+            alert.setContentText("Please note that all contacts belong to this group will be deleted together.");
             alert.getButtonTypes().setAll(ButtonType.OK, ButtonType.CANCEL);
 
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 groups.remove(selectedItem);
                 GroupDAO.saveGroupToFile();
+
+                // remove contacts
+                for (Contact contact : contacts) {
+                    if (contact.getGroup().equals(selectedItem)) contacts.remove(contact);
+                }
+
                 return;
             } else if (result.isPresent() && result.get() == ButtonType.CANCEL) {
                 return;
