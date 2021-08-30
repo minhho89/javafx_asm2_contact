@@ -3,6 +3,7 @@ package com.example.asm3.controller;
 import com.example.asm3.dao.GroupDAO;
 import com.example.asm3.entity.Contact;
 import com.example.asm3.entity.Group;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -33,6 +34,7 @@ public class GroupController {
 
 
     public static ObservableList<Group> groups;
+    public static ObservableList<Group> searchGroups;
     static ObservableList<Contact> contacts;
 
     static {
@@ -71,19 +73,38 @@ public class GroupController {
         stage.close();
     }
 
+    // TODO: move to DAO
     // Search using linear algorithm
-    public boolean search(String groupName) {
+    public int search(String groupName) {
+        int index = 0;
         for (Group group : groups) {
             if (group.getName().equalsIgnoreCase(groupName)) {
-                return true;
+               return index;
             }
+            index++;
         }
-        return false;
+        return -1;
     }
 
     @FXML
     public void searchAction() {
-        System.out.println(search(searchField.getText()));
+        searchGroups = FXCollections.observableArrayList();
+        searchGroups.removeAll();
+
+        if (!searchField.getText().isBlank()) {
+            String searchingGroupName = searchField.getText();
+            int index = search(searchingGroupName);
+            if (index != -1) {
+                // If found
+                searchGroups.add(groups.get(index));
+                groupListView.setItems(searchGroups);
+            } else {
+                // If not
+            }
+        } else {
+            groupListView.setItems(groups);
+        }
+
     }
 
     // Add new Group items to group
@@ -91,7 +112,7 @@ public class GroupController {
     public void addAction()  {
         if (groupNameField.getText() != null || groupNameField.getText().trim() != "") {
             // Check duplicates
-            if (!search(groupNameField.getText())) {
+            if (search(groupNameField.getText()) == -1) {
                 // No duplicate -> add to group
                 groups.add(new Group(groupNameField.getText()));
                 Alert a = new Alert(Alert.AlertType.INFORMATION);
