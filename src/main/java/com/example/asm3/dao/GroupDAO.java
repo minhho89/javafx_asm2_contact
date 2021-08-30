@@ -19,10 +19,13 @@ public class GroupDAO {
 
     static ObservableList<Group> groups;
 
+    public static void setGroups(ObservableList<Group> groups) {
+        GroupDAO.groups = groups;
+    }
+
     // Load all group to List
     public static ObservableList<Group> loadGroup() throws IOException {
         groups = FXCollections.observableArrayList();
-
         BufferedReader bw = null;
         try {
             bw = new BufferedReader(new FileReader(PATH));
@@ -34,13 +37,16 @@ public class GroupDAO {
             e.printStackTrace();
         } finally {
             bw.close();
-            return groups;
         }
-
+        System.out.println(groups);
+        return groups;
     }
 
     //save all groups from a given list to a text file
     public static void saveGroupToFile() throws IOException {
+        for (Group group : groups) {
+            System.out.println(group.getName());
+        }
         Writer wr = null;
         StringBuilder result;
         try {
@@ -52,7 +58,6 @@ public class GroupDAO {
         } finally {
             wr.close();
         }
-
     }
 
 }

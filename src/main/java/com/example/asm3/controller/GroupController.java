@@ -32,13 +32,14 @@ public class GroupController {
     @FXML
     private TextField groupNameField;
 
-    public static ObservableList<Group> groups = FXCollections.observableArrayList();
+    public static ObservableList<Group> groups;
     public static ObservableList<Group> searchGroups;
 
 
     static {
         try {
             groups = GroupDAO.loadGroup();
+            System.out.println(groups);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -68,6 +69,7 @@ public class GroupController {
 
     @FXML
     public void closeWindow() {
+        // Close window
         Stage stage = (Stage) mainPanel.getScene().getWindow();
         stage.close();
     }
@@ -114,11 +116,16 @@ public class GroupController {
             if (search(groupNameField.getText()) == -1) {
                 // No duplicate -> add to group
                 groups.add(new Group(groupNameField.getText()));
+
                 Alert a = new Alert(Alert.AlertType.INFORMATION);
                 a.setTitle("Information");
                 a.setHeaderText(null);
                 a.setContentText("New Group Has Been Added Successfully");
                 a.showAndWait();
+
+                System.out.println("Group controller: " + groups.toString());
+
+                GroupDAO.setGroups(groups);
                 GroupDAO.saveGroupToFile();
             } else {
                 // Inform user that input value duplicates
@@ -164,6 +171,8 @@ public class GroupController {
                     alert.setHeaderText(null);
                     alert.setContentText("Group \"" + oldName + "\" has been renamed to \"" + newName + "\" successfully.");
                     alert.showAndWait();
+
+                    GroupDAO.setGroups(groups);
                     GroupDAO.saveGroupToFile();
                 } else {
                     // old group name is same with new name
@@ -192,9 +201,9 @@ public class GroupController {
             // remove contacts
             ContactController.getContacts().removeIf(contact -> contact.getGroup().equals(selectedItem));
             ContactDAO.saveContactsToFile();
-
             // remove group
             groups.remove(selectedItem);
+            GroupDAO.setGroups(groups);
             GroupDAO.saveGroupToFile();
 
             return;
@@ -203,7 +212,6 @@ public class GroupController {
         }
 
     }
-
 
     private boolean IsBelongsToGroups(Group checkingGroup) {
         if (ContactDAO.getContacts() != null) {

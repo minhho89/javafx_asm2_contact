@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.util.Optional;
 
 public class ContactController {
-
     @FXML
     private BorderPane mainPanel;
 
@@ -66,7 +65,6 @@ public class ContactController {
         if (groups.size() > 0) {
             cbGroup.getSelectionModel().selectFirst();
         }
-
     }
 
     @FXML
@@ -295,7 +293,11 @@ public class ContactController {
             stage.setTitle("Groups Manager");
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
-            stage.show();
+            stage.showAndWait();
+
+            // refresh populating data
+            initialize();
+
         } catch (IOException e) {
             e.printStackTrace();
             return;
