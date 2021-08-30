@@ -4,6 +4,7 @@ import javafx.scene.control.Alert;
 
 public class Util {
     public static final String CONFIRM = "CONFIRMATION";
+
     public static Alert displayAlert(Alert.AlertType alertType, String title, String headerText, String contentText) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
