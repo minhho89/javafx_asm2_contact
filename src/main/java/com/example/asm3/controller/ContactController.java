@@ -29,11 +29,14 @@ public class ContactController {
     @FXML
     private ComboBox<Group> cbGroup;
 
-    private ObservableList<Group> groups = GroupController.groups;
-
+    private static ObservableList<Group> groups = GroupController.groups;
     public static ObservableList<Contact> contacts;
+
+    private static ObservableList<Group> searchGroup;
+
     static {
         try {
+            groups.add(0, new Group("All"));
             contacts = ContactDAO.loadContacts();
         } catch (Exception e) {
             e.printStackTrace();
@@ -44,6 +47,11 @@ public class ContactController {
     void initialize() {
         contactsTable.setItems(contacts);
         cbGroup.setItems(groups);
+
+        if (groups.size() > 0) {
+            cbGroup.getSelectionModel().selectFirst();
+        }
+
     }
 
     @FXML
