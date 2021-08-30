@@ -135,8 +135,8 @@ public class ContactController {
                 addController.emailFieldValidationHandle();
                 addController.fieldValidHandle(addController.getEmailField());
             }
-
-            addController.getDialogPane().getScene().getWindow().sizeToScene(); // resize the dialog when children added
+            // resize the dialog when children added
+            addController.getDialogPane().getScene().getWindow().sizeToScene();
         });
 
         Optional<ButtonType> result = dialog.showAndWait();
