@@ -317,9 +317,12 @@ public class ContactController {
             } else {
                 // If contact info field is not blank
                 for (Contact contact : contacts) {
-                    if (contact.toString().contains(searchField.getText()))
+                    if (contact.toString().contains(searchField.getText())) {
+                        // If contact found
                         searchContactList.add(contact);
+                    }
                 }
+
             }
         } else {
             // If selected group is not "All"
@@ -334,14 +337,29 @@ public class ContactController {
                 // If contact info field is not blank
                 for (Contact contact : contacts) {
                     if (contact.getGroup().equals(searchGroup) && contact.toString().contains(searchField.getText())) {
+                        // If contact found
                         searchContactList.add(contact);
                     }
                 }
             }
         }
 
-        // Table loads item from search result list
-        contactsTable.setItems(searchContactList);
+        if (searchContactList.size() > 0) {
+            // If found contacts: Table loads item from search result list
+            contactsTable.setItems(searchContactList);
+        } else {
+            // If no contact found: show alert
+            noContactFoundAlert();
+        }
+    }
+
+    public void noContactFoundAlert() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("No contact found");
+        alert.setHeaderText(null);
+        alert.setContentText("No such contact found. Please try again with different information.");
+        alert.showAndWait();
+        return;
     }
 
 }
