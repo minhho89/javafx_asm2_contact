@@ -1,17 +1,13 @@
 package com.example.asm3.entity;
 
-import java.util.List;
-
 public class Group {
     private String name;
 
     public Group(String name) {
         this.name = name;
-
     }
 
     public Group() {
-
     }
 
     public String getName() {
@@ -20,7 +16,6 @@ public class Group {
 
     public void setName(String name) {
         this.name = name;
-
     }
 
     @Override
@@ -33,10 +28,5 @@ public class Group {
         if (obj == null || name == null) return false;
         Group g = (Group) obj;
         return name.equals(((Group) obj).getName());
-    }
-
-    //return list of contact by group name
-    public List<Contact> contacts() throws Exception {
-        throw new UnsupportedOperationException("Remove this line and implement your code here!");
     }
 }

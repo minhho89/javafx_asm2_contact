@@ -18,6 +18,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Optional;
 
 import static com.example.asm3.util.Util.CONFIRM;
@@ -324,7 +325,7 @@ public class ContactController {
             } else {
                 // If contact info field is not blank
                 for (Contact contact : contacts) {
-                    if (contact.toString().contains(searchField.getText())) {
+                    if (contact.toString().toLowerCase().contains(searchField.getText().toLowerCase(Locale.ROOT))) {
                         // If contact found
                         searchContactList.add(contact);
                     }

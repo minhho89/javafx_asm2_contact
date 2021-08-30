@@ -23,7 +23,13 @@ public class GroupDAO {
         GroupDAO.groups = groups;
     }
 
-    // Load all group to List
+    /**
+     * Load groups from file
+     * Using delimiter ",,,"
+     *
+     * @return list of contacts
+     * @throws IOException
+     */
     public static ObservableList<Group> loadGroup() throws IOException {
         groups = FXCollections.observableArrayList();
         BufferedReader bw = null;
@@ -41,7 +47,12 @@ public class GroupDAO {
         return groups;
     }
 
-    //save all groups from a given list to a text file
+    /**
+     * Save groups to file
+     * Using delimiter ",,,"
+     *
+     * @throws IOException
+     */
     public static void saveGroupToFile() throws IOException {
         Writer wr = null;
         StringBuilder result;
