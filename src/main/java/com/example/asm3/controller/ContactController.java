@@ -30,14 +30,24 @@ public class ContactController {
     @FXML
     private ComboBox<Group> cbGroup;
 
+    @FXML
+    private TextField searchField;
+
     private static ObservableList<Group> groups = GroupController.groups;
+    private static ObservableList<Group> searchGroupsDisplayList = FXCollections.observableArrayList();;
     public static ObservableList<Contact> contacts;
 
     private static ObservableList<Contact> searchContactList;
 
     static {
         try {
-            groups.add(0, new Group("All"));
+            // copy item from groups to searchGroupsDisplayList
+            for (Group group : groups) {
+                searchGroupsDisplayList.add(group);
+            }
+            // Add "All" to search List
+            searchGroupsDisplayList.add(0, new Group("All"));
+
             contacts = ContactDAO.loadContacts();
         } catch (Exception e) {
             e.printStackTrace();
@@ -47,7 +57,7 @@ public class ContactController {
     @FXML
     void initialize() {
         contactsTable.setItems(contacts);
-        cbGroup.setItems(groups);
+        cbGroup.setItems(searchGroupsDisplayList);
 
         if (groups.size() > 0) {
             cbGroup.getSelectionModel().selectFirst();
@@ -60,6 +70,7 @@ public class ContactController {
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.initOwner(mainPanel.getScene().getWindow());
         dialog.setTitle("Add new contact");
+        dialog.setHeaderText("Add a new contact");
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(Main.class.getResource("addUpdateContact.fxml"));
         try {
@@ -100,6 +111,7 @@ public class ContactController {
                     }
                 }
                 addController.blankFieldsResolveHandle();
+                contactsTable.setItems(contacts);
             }
 
             // Check if PhoneField is valid
@@ -159,6 +171,7 @@ public class ContactController {
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.initOwner(mainPanel.getScene().getWindow());
         dialog.setTitle("Update a contact");
+        dialog.setHeaderText("Update a contact");
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(Main.class.getResource("addUpdateContact.fxml"));
         try {
@@ -197,6 +210,7 @@ public class ContactController {
                     }
                 }
                 updateController.blankFieldsResolveHandle();
+                contactsTable.setItems(contacts);
             }
 
             // Check if PhoneField is valid
@@ -286,23 +300,47 @@ public class ContactController {
 
     @FXML
     public void searchAction() {
+        // TODO: Refactor -> move feature body to DAO groups
         Group searchGroup;
-        Contact searchContact;
 
+        // Initialize
         searchContactList = FXCollections.observableArrayList();
         searchContactList.removeAll();
 
         searchGroup = cbGroup.getSelectionModel().getSelectedItem();
 
         if (searchGroup.getName().equalsIgnoreCase("All")) {
-            searchContactList = contacts;
+            // If group is selected as "All"
+            if (searchField.getText().isBlank()) {
+                // If contact info field is blank
+                searchContactList = contacts;
+            } else {
+                // If contact info field is not blank
+                for (Contact contact : contacts) {
+                    if (contact.toString().contains(searchField.getText()))
+                        searchContactList.add(contact);
+                }
+            }
         } else {
-            for (Contact contact : contacts) {
-                if (contact.getGroup().equals(searchGroup)) {
-                    searchContactList.add(contact);
+            // If selected group is not "All"
+            if (searchField.getText().isBlank()) {
+                // If contact info field is blank
+                for (Contact contact : contacts) {
+                    if (contact.getGroup().equals(searchGroup)) {
+                        searchContactList.add(contact);
+                    }
+                }
+            } else {
+                // If contact info field is not blank
+                for (Contact contact : contacts) {
+                    if (contact.getGroup().equals(searchGroup) && contact.toString().contains(searchField.getText())) {
+                        searchContactList.add(contact);
+                    }
                 }
             }
         }
+
+        // Table loads item from search result list
         contactsTable.setItems(searchContactList);
     }
 

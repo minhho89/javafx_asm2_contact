@@ -18,7 +18,7 @@
             <Label text="Filter by group"/>
             <ComboBox fx:id="cbGroup" prefWidth="150.0"/>
             <Label text="Enter contact information"/>
-            <TextField fx:id="search" prefHeight="27.0" prefWidth="168.0"/>
+            <TextField fx:id="searchField" prefHeight="27.0" prefWidth="168.0"/>
             <StackPane alignment="CENTER_RIGHT">
                 <HBox.hgrow>
                     <Priority fx:value="ALWAYS"/>

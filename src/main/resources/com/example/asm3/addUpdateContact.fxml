@@ -8,9 +8,7 @@
     <padding>
         <Insets top="10" left="10" right="10" bottom="10"/>
     </padding>
-    <headerText>
-        Add new contact
-    </headerText>
+   
     <content>
         <VBox fx:id="vbox" spacing="10">
             <GridPane vgap="10" hgap="10">
