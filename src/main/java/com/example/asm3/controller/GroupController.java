@@ -5,7 +5,6 @@ import com.example.asm3.entity.Contact;
 import com.example.asm3.entity.Group;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -31,7 +30,6 @@ public class GroupController {
 
     @FXML
     private TextField groupNameField;
-
 
     public static ObservableList<Group> groups;
     public static ObservableList<Group> searchGroups;
@@ -110,7 +108,7 @@ public class GroupController {
     // Add new Group items to group
     @FXML
     public void addAction()  {
-        if (groupNameField.getText() != null || groupNameField.getText().trim() != "") {
+        if (!groupNameField.getText().isBlank() || groupNameField.getText().trim() != "") {
             // Check duplicates
             if (search(groupNameField.getText()) == -1) {
                 // No duplicate -> add to group
@@ -128,6 +126,12 @@ public class GroupController {
                 a.setContentText("Group " + groupNameField.getText() + " Is Already Added.");
                 a.showAndWait();
             }
+        } else {
+            Alert a = new Alert((Alert.AlertType.ERROR));
+            a.setTitle("Cannot perform task");
+            a.setHeaderText(null);
+            a.setContentText("Please input a group name.");
+            a.showAndWait();
         }
     }
 
@@ -139,6 +143,17 @@ public class GroupController {
             if (selectedGroup != null) {
                 String oldName = groups.get(groups.indexOf(selectedGroup)).getName();
                 String newName = groupNameField.getText();
+
+                if (IsBelongsToGroups(newName)) {
+                    // Check if newName equals to any existence group name or not
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Cannot perform task");
+                    alert.setHeaderText(null);
+                    alert.setContentText("The group name \"" + "\" is already exists. Please choose another name.");
+                    alert.showAndWait();
+                    return;
+                }
+
                 if (!oldName.equalsIgnoreCase(newName)) {
                     // old name is different from new name
                     groups.get(groups.indexOf(selectedGroup)).setName(newName);
@@ -162,7 +177,7 @@ public class GroupController {
     @FXML
     public void deleteAction()  {
         Group selectedItem = selectedGroup();
-        if(!belongToGroup(selectedItem)) {
+        if(!IsBelongsToGroups(selectedItem)) {
             // delete
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Confirmation");
@@ -188,10 +203,20 @@ public class GroupController {
     }
 
 
-    private boolean belongToGroup(Group CheckingGroup) {
+    private boolean IsBelongsToGroups(Group checkingGroup) {
         if (contacts != null) {
             for (Contact contact : contacts) {
-                if (contact.getGroup().equals(CheckingGroup)) return true;
+                if (contact.getGroup().equals(checkingGroup)) return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean IsBelongsToGroups(String groupName) {
+        if (groups != null) {
+            for (Group group : groups) {
+                if(group.getName().equalsIgnoreCase(groupName))
+                    return true;
             }
         }
         return false;
@@ -207,15 +232,5 @@ public class GroupController {
         }
         return -1;
     }
-    //operations on each button on window
-    public void groupAction(ActionEvent evt) throws Exception {
-        throw new UnsupportedOperationException("Remove this line and implement your code here!");
-    }
 
-    //output all groups to table view
-//    @FXML
-//    public void showGroup(ObservableList<Group> groups) {
-//
-//
-//    }
 }

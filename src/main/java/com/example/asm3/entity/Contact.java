@@ -77,13 +77,9 @@ public class Contact {
         this.dob = dob;
     }
 
-
-
     @Override
     public String toString() {
 
         return String.format("%-15s:%-15s:%-10s:%-25s:%-10s:%-10s\n", firstName, lastName, phone, email, dob, group);
     }
-
 }
-
