@@ -93,7 +93,7 @@
                 <HBox.hgrow>
                     <Priority fx:value="ALWAYS"/>
                 </HBox.hgrow>
-                <Button fx:id="btnGroup" text="Manage groups" onAction="#openGroup"/>
+                <Button fx:id="btnGroup" text="Manage groups" onAction="#openGroupManagement"/>
             </StackPane>
         </HBox>
     </bottom>

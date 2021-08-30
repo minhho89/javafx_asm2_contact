@@ -2,9 +2,9 @@ package com.example.asm3.controller;
 
 import com.example.asm3.Main;
 import com.example.asm3.dao.ContactDAO;
-import com.example.asm3.dao.GroupDAO;
 import com.example.asm3.entity.Contact;
 import com.example.asm3.entity.Group;
+import com.example.asm3.util.Util;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -20,25 +20,16 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Optional;
 
+import static com.example.asm3.util.Util.CONFIRM;
+import static com.example.asm3.util.Util.displayAlert;
+
 public class ContactController {
-    @FXML
-    private BorderPane mainPanel;
-
-    @FXML
-    private TableView<Contact> contactsTable;
-
-    @FXML
-    private ComboBox<Group> cbGroup;
-
-    @FXML
-    private TextField searchField;
-
     public static ObservableList<Group> groups;
+    public static ObservableList<Contact> searchContactList;
     private static ObservableList<Group> searchGroupsDisplayList;
     private static ObservableList<Contact> contacts;
 
-    public static ObservableList<Contact> searchContactList;
-
+    // Load data to groups and contacts from DAOs
     static {
         try {
             groups = GroupController.groups;
@@ -47,6 +38,15 @@ public class ContactController {
             e.printStackTrace();
         }
     }
+
+    @FXML
+    private BorderPane mainPanel;
+    @FXML
+    private TableView<Contact> contactsTable;
+    @FXML
+    private ComboBox<Group> cbGroup;
+    @FXML
+    private TextField searchField;
 
     public static ObservableList<Contact> getContacts() {
         return contacts;
@@ -63,6 +63,12 @@ public class ContactController {
         }
     }
 
+    /**
+     * Populate group items to the search ComboBox
+     * Add "All" item above
+     *
+     * @throws IOException
+     */
     public void populateSearchGroupComboBox() throws IOException {
         searchGroupsDisplayList = FXCollections.observableArrayList();
         searchGroupsDisplayList.addAll(groups);
@@ -70,6 +76,11 @@ public class ContactController {
         searchGroupsDisplayList.add(0, new Group("All"));
     }
 
+    /**
+     * Show Add new contact dialog
+     *
+     * @throws IOException
+     */
     @FXML
     public void showAddNewContactDialog() throws IOException {
         Dialog<ButtonType> dialog = new Dialog<>();
@@ -87,38 +98,22 @@ public class ContactController {
         }
 
         ButtonType saveButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
-
         dialog.getDialogPane().getButtonTypes().add(saveButtonType);
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
-
         final Button btSave = (Button) dialog.getDialogPane().lookupButton(saveButtonType);
-
         AddUpdateContactController addController = fxmlLoader.getController();
-
         // Handle input validation
         btSave.addEventFilter(ActionEvent.ACTION, event -> {
-            // Check if all fields are blank
             if (addController.areAllFieldsBlank()) {
+                // If all fields are left blank
                 event.consume();
                 addController.blankInvalidHandle();
             } else {
-                // valid handle
-                for (Control control : addController.getControls()) {
-                    if (control instanceof TextField) {
-                        if (!((TextField) control).getText().isBlank()) {
-                            addController.fieldValidHandle(control);
-                        }
-                    }
-                    if (control instanceof DatePicker || control instanceof ComboBox) {
-                        if(((DatePicker)control).getValue() != null) {
-                            addController.fieldValidHandle(control);
-                        }
-                    }
-                }
-                addController.blankFieldsResolveHandle();
+                // Blank valid handle
+                addController.blankValidHandle();
+                addController.blankFieldsResolveHandle(); //Remove blank field message
                 contactsTable.setItems(contacts);
             }
-
             // Check if PhoneField is valid
             if (!addController.checkPhoneFieldValidation(addController.getPhoneField())) {
                 event.consume();
@@ -129,7 +124,6 @@ public class ContactController {
                 addController.phoneFieldValidationHandle();
                 addController.fieldValidHandle(addController.getPhoneField());
             }
-
             // Check if Email field is valid
             if (!addController.checkEmailFieldValidation(addController.getEmailField())) {
                 event.consume();
@@ -140,14 +134,13 @@ public class ContactController {
                 addController.emailFieldValidationHandle();
                 addController.fieldValidHandle(addController.getEmailField());
             }
-
             addController.getDialogPane().getScene().getWindow().sizeToScene(); // resize the dialog when children added
         });
-
         Optional<ButtonType> result = dialog.showAndWait();
         if (result.isPresent() && result.get() == saveButtonType) {
-//             Check if any fields empty
+            // Check if any fields empty
             if (!addController.areAllFieldsBlank()) {
+                // If not empty then add new contact then save to file
                 Contact newContact = addController.getInputContact();
                 contacts.add(newContact);
                 // Save to file
@@ -209,7 +202,7 @@ public class ContactController {
                         }
                     }
                     if (control instanceof DatePicker || control instanceof ComboBox) {
-                        if(((DatePicker)control).getValue() != null) {
+                        if (((DatePicker) control).getValue() != null) {
                             updateController.fieldValidHandle(control);
                         }
                     }
@@ -257,22 +250,19 @@ public class ContactController {
         }
     }
 
+
     //delete a selected contact
     @FXML
     public void deleteContact() throws IOException {
         Contact selectedContact = contactsTable.getSelectionModel().getSelectedItem();
         if (selectedContact == null) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Confirmation");
-            alert.setHeaderText("No Contact Selected");
-            alert.setContentText("Please select the contact you want to delete");
-            Optional<ButtonType> result = alert.showAndWait();
+            Alert a = displayAlert(Alert.AlertType.INFORMATION, Util.CONFIRM,
+                    "No contact selected", "Please select the contact you want to delete");
+            a.showAndWait();
             return;
         }
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Confirmation");
-        alert.setHeaderText("Confirmation");
-        alert.setContentText("Do you want to delete selected contact");
+        Alert alert = displayAlert(Alert.AlertType.CONFIRMATION, CONFIRM,
+                CONFIRM, "Do you want to delete selected contact?");
         alert.getButtonTypes().setAll(ButtonType.OK, ButtonType.CANCEL);
 
         Optional<ButtonType> result = alert.showAndWait();
@@ -286,8 +276,13 @@ public class ContactController {
         }
     }
 
+    /**
+     * Open Group Management stage to add, update, delete or search for groups
+     *
+     * @throws IOException
+     */
     @FXML
-    public void openGroup() throws IOException {
+    public void openGroupManagement() throws IOException {
         Parent root;
         try {
             root = FXMLLoader.load(Main.class.getResource("group.fxml"));
@@ -305,9 +300,14 @@ public class ContactController {
         contactsTable.refresh();
     }
 
+    /**
+     * Handles search action.
+     * When user filter a group or/and enter information to search.
+     * The result will be stored as a list of groups called searchGroup.
+     * The table will show the searchGroup if there is any result.
+     */
     @FXML
     public void searchAction() {
-        // TODO: Refactor -> move feature body to DAO groups
         Group searchGroup;
 
         // Initialize
@@ -349,23 +349,14 @@ public class ContactController {
                 }
             }
         }
-
         if (searchContactList.size() > 0) {
             // If found contacts: Table loads item from search result list
             contactsTable.setItems(searchContactList);
         } else {
             // If no contact found: show alert
-            noContactFoundAlert();
+            Alert alert = displayAlert(Alert.AlertType.INFORMATION, "No contact found",
+                    null, "No such contact found. Please try again with different information.");
+            alert.showAndWait();
         }
     }
-
-    public void noContactFoundAlert() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("No contact found");
-        alert.setHeaderText(null);
-        alert.setContentText("No such contact found. Please try again with different information.");
-        alert.showAndWait();
-        return;
-    }
-
 }
