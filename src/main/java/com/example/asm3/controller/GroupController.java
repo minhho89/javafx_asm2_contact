@@ -150,7 +150,7 @@ public class GroupController {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Cannot perform task");
                     alert.setHeaderText(null);
-                    alert.setContentText("The group name \"" + "\" is already exists. Please choose another name.");
+                    alert.setContentText("The group name \"" + newName +  "\" is already exists. Please choose another name.");
                     alert.showAndWait();
                     return;
                 }
