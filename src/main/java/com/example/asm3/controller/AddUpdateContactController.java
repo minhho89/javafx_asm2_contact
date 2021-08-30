@@ -140,7 +140,6 @@ public class AddUpdateContactController {
         });
     }
 
-
     /**
      * Get value from fields
      *
@@ -232,7 +231,7 @@ public class AddUpdateContactController {
                 }
             }
             if (control instanceof DatePicker || control instanceof ComboBox) {
-                if(((DatePicker)control).getValue() != null) {
+                if (((DatePicker) control).getValue() != null) {
                     fieldValidHandle(control);
                 }
             }
@@ -254,7 +253,6 @@ public class AddUpdateContactController {
     }
 
     // Below code is handle each field's valid or invalid behavior
-
     private void resetAllFailureFlag() {
         blankFieldFailureFlag = false;
         emailFailureFlag = false;
