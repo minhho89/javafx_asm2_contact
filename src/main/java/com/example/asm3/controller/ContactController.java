@@ -4,6 +4,7 @@ import com.example.asm3.Main;
 import com.example.asm3.dao.ContactDAO;
 import com.example.asm3.entity.Contact;
 import com.example.asm3.entity.Group;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -32,7 +33,7 @@ public class ContactController {
     private static ObservableList<Group> groups = GroupController.groups;
     public static ObservableList<Contact> contacts;
 
-    private static ObservableList<Group> searchGroup;
+    private static ObservableList<Contact> searchContactList;
 
     static {
         try {
@@ -281,6 +282,28 @@ public class ContactController {
             e.printStackTrace();
             return;
         }
+    }
+
+    @FXML
+    public void searchAction() {
+        Group searchGroup;
+        Contact searchContact;
+
+        searchContactList = FXCollections.observableArrayList();
+        searchContactList.removeAll();
+
+        searchGroup = cbGroup.getSelectionModel().getSelectedItem();
+
+        if (searchGroup.getName().equalsIgnoreCase("All")) {
+            searchContactList = contacts;
+        } else {
+            for (Contact contact : contacts) {
+                if (contact.getGroup().equals(searchGroup)) {
+                    searchContactList.add(contact);
+                }
+            }
+        }
+        contactsTable.setItems(searchContactList);
     }
 
 }
