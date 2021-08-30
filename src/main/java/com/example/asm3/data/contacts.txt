@@ -1,9 +1,6 @@
 ,,,James,,,Bond,,,0897878,,,jams@fdd,,,2021/08/18,,,Friends
 ,,,Black,,,Jack,,,997878,,,sdfs@dsdfg.com,,,2021/08/09,,,Friends
 ,,,Tim,,,Smith,,,9898986787432,,,smith@wil.com,,,2021/08/09,,,Friends
-,,,Tom,,,Cruise,,,8908989,,,tom@cruise.com,,,2021/08/25,,,Family
 ,,,Steves,,,Jobs,,,089877,,,steves@apple.com,,,2021/08/09,,,Friends
 ,,,Lucky,,,Luckes,,,98894,,,luck@gmail.com,,,2021/08/23,,,Friends
 ,,,James,,,Smith,,,9878744345,,,jm@gmail.com,,,2021/08/09,,,Friends
-,,,James,,,Smith,,,1234567890,,,james@gmail.com,,,2021/08/09,,,Family
-,,,Tim,,,Black,,,0987654321,,,timblack@yahoo.com,,,2021/08/08,,,Family

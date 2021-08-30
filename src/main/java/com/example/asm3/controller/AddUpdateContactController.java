@@ -49,7 +49,7 @@ public class AddUpdateContactController {
     static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
     public AddUpdateContactController() {
-        contacts = ContactController.contacts;
+        contacts = ContactController.getContacts();
         controls = FXCollections.observableArrayList(firstNameField, lastNameField, phoneField,
                 emailField, birthdayPicker, groupCombo);
     }

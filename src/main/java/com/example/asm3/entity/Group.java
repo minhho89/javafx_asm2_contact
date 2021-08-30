@@ -10,6 +10,10 @@ public class Group {
 
     }
 
+    public Group() {
+
+    }
+
     public String getName() {
         return name;
     }

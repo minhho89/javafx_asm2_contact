@@ -20,7 +20,19 @@ public class ContactDAO {
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
     static ObservableList<Contact> contacts;
-    static ObservableList<Group> groups = GroupController.groups;
+    static ObservableList<Group> groups;
+
+    static {
+        try {
+            groups = GroupDAO.loadGroup();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static ObservableList<Contact> getContacts() {
+        return contacts;
+    }
 
     public static ObservableList<Contact> loadContacts() throws IOException {
         contacts = FXCollections.observableArrayList();
@@ -38,13 +50,13 @@ public class ContactDAO {
                 LocalDate dob =  LocalDate.parse(sc.next(), FORMATTER);
                 String groupName = sc.next().trim();
                 int index = GroupController.findIndexByGroupName(groupName);
-                Group group;
+                Contact contact = new Contact();
                 if (index != -1) {
-                    group = groups.get(index);
+                    Group group = groups.get(index);
+                    contact = new Contact(firstName, lastName, phone, email, dob, group);
                 } else {
-                   group = null;
+                    contact = new Contact(firstName, lastName, phone, email, dob);
                 }
-                Contact contact = new Contact(firstName, lastName, phone, email, dob, group);
                 contacts.add(contact);
 
 //                 FOR DEBUG

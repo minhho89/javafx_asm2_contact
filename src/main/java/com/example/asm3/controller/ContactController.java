@@ -2,6 +2,7 @@ package com.example.asm3.controller;
 
 import com.example.asm3.Main;
 import com.example.asm3.dao.ContactDAO;
+import com.example.asm3.dao.GroupDAO;
 import com.example.asm3.entity.Contact;
 import com.example.asm3.entity.Group;
 import javafx.collections.FXCollections;
@@ -20,7 +21,6 @@ import java.io.IOException;
 import java.util.Optional;
 
 public class ContactController {
-
     @FXML
     private BorderPane mainPanel;
 
@@ -33,36 +33,41 @@ public class ContactController {
     @FXML
     private TextField searchField;
 
-    private static ObservableList<Group> groups = GroupController.groups;
-    private static ObservableList<Group> searchGroupsDisplayList = FXCollections.observableArrayList();;
-    public static ObservableList<Contact> contacts;
+    public static ObservableList<Group> groups;
+    private static ObservableList<Group> searchGroupsDisplayList;
+    private static ObservableList<Contact> contacts;
 
-    private static ObservableList<Contact> searchContactList;
+    public static ObservableList<Contact> searchContactList;
 
     static {
         try {
-            // copy item from groups to searchGroupsDisplayList
-            for (Group group : groups) {
-                searchGroupsDisplayList.add(group);
-            }
-            // Add "All" to search List
-            searchGroupsDisplayList.add(0, new Group("All"));
-
+            groups = GroupController.groups;
             contacts = ContactDAO.loadContacts();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    @FXML
-    void initialize() {
-        contactsTable.setItems(contacts);
-        cbGroup.setItems(searchGroupsDisplayList);
+    public static ObservableList<Contact> getContacts() {
+        return contacts;
+    }
 
-        if (groups.size() > 0) {
+    @FXML
+    void initialize() throws IOException {
+        contactsTable.setItems(contacts);
+
+        populateSearchGroupComboBox();
+        cbGroup.setItems(searchGroupsDisplayList);
+        if (searchGroupsDisplayList.size() > 0) {
             cbGroup.getSelectionModel().selectFirst();
         }
+    }
 
+    public void populateSearchGroupComboBox() throws IOException {
+        searchGroupsDisplayList = FXCollections.observableArrayList();
+        searchGroupsDisplayList.addAll(groups);
+        // Add "All" to search List
+        searchGroupsDisplayList.add(0, new Group("All"));
     }
 
     @FXML
@@ -246,7 +251,6 @@ public class ContactController {
                 int index = contacts.indexOf(selectedContact);
                 Contact updatedContact = updateController.getInputContact();
                 contacts.set(index, updatedContact);
-                System.out.println(selectedContact);
                 // Save to file
                 ContactDAO.saveContactsToFile();
             }
@@ -283,7 +287,7 @@ public class ContactController {
     }
 
     @FXML
-    public void openGroup() {
+    public void openGroup() throws IOException {
         Parent root;
         try {
             root = FXMLLoader.load(Main.class.getResource("group.fxml"));
@@ -292,10 +296,13 @@ public class ContactController {
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
+
         } catch (IOException e) {
             e.printStackTrace();
             return;
         }
+        // Reload table
+        contactsTable.refresh();
     }
 
     @FXML
@@ -322,7 +329,6 @@ public class ContactController {
                         searchContactList.add(contact);
                     }
                 }
-
             }
         } else {
             // If selected group is not "All"
