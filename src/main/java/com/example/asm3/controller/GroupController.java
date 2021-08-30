@@ -1,5 +1,6 @@
 package com.example.asm3.controller;
 
+import com.example.asm3.Main;
 import com.example.asm3.dao.ContactDAO;
 import com.example.asm3.dao.GroupDAO;
 import com.example.asm3.entity.Contact;
@@ -7,11 +8,15 @@ import com.example.asm3.entity.Group;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -34,7 +39,6 @@ public class GroupController {
 
     public static ObservableList<Group> groups;
     public static ObservableList<Group> searchGroups;
-
 
     static {
         try {
@@ -69,9 +73,23 @@ public class GroupController {
 
     @FXML
     public void closeWindow() {
-        // Close window
-        Stage stage = (Stage) mainPanel.getScene().getWindow();
-        stage.close();
+        Parent root;
+        try {
+            // Close this stage
+            Stage thisStage = (Stage) mainPanel.getScene().getWindow();
+            thisStage.close();
+
+            // ReOpen Contact Management State
+            root = FXMLLoader.load(Main.class.getResource("contact.fxml"));
+            Stage stage = new Stage();
+            stage.setTitle("Contact Management System");
+            stage.setScene(new Scene(root));
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
     }
 
     // TODO: move to DAO
@@ -123,8 +141,7 @@ public class GroupController {
                 a.setContentText("New Group Has Been Added Successfully");
                 a.showAndWait();
 
-                System.out.println("Group controller: " + groups.toString());
-
+                ContactController.groups = groups;
                 GroupDAO.setGroups(groups);
                 GroupDAO.saveGroupToFile();
             } else {
@@ -164,13 +181,22 @@ public class GroupController {
                 }
 
                 if (!oldName.equalsIgnoreCase(newName)) {
-                    // old name is different from new name
+                    // old name is different from new name -> update
                     groups.get(groups.indexOf(selectedGroup)).setName(newName);
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Information");
                     alert.setHeaderText(null);
                     alert.setContentText("Group \"" + oldName + "\" has been renamed to \"" + newName + "\" successfully.");
                     alert.showAndWait();
+
+                    ObservableList<Contact> contacts = ContactController.getContacts();
+
+                    for(Contact contact : contacts) {
+                        if (contact.getGroup().getName().equalsIgnoreCase(oldName))
+                            contact.getGroup().setName(newName);
+                    }
+
+                    ContactDAO.saveContactsToFile();
 
                     GroupDAO.setGroups(groups);
                     GroupDAO.saveGroupToFile();

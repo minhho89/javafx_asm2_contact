@@ -2,6 +2,7 @@ package com.example.asm3.controller;
 
 import com.example.asm3.Main;
 import com.example.asm3.dao.ContactDAO;
+import com.example.asm3.dao.GroupDAO;
 import com.example.asm3.entity.Contact;
 import com.example.asm3.entity.Group;
 import javafx.collections.FXCollections;
@@ -32,21 +33,15 @@ public class ContactController {
     @FXML
     private TextField searchField;
 
-    private static ObservableList<Group> groups = GroupController.groups;
-    private static ObservableList<Group> searchGroupsDisplayList = FXCollections.observableArrayList();;
+    public static ObservableList<Group> groups;
+    private static ObservableList<Group> searchGroupsDisplayList;
     private static ObservableList<Contact> contacts;
 
-    private static ObservableList<Contact> searchContactList;
+    public static ObservableList<Contact> searchContactList;
 
     static {
         try {
-            // copy item from groups to searchGroupsDisplayList
-            for (Group group : groups) {
-                searchGroupsDisplayList.add(group);
-            }
-            // Add "All" to search List
-            searchGroupsDisplayList.add(0, new Group("All"));
-
+            groups = GroupController.groups;
             contacts = ContactDAO.loadContacts();
         } catch (Exception e) {
             e.printStackTrace();
@@ -58,13 +53,23 @@ public class ContactController {
     }
 
     @FXML
-    void initialize() {
+    void initialize() throws IOException {
+        System.out.println("Initialize");
         contactsTable.setItems(contacts);
-        cbGroup.setItems(searchGroupsDisplayList);
 
-        if (groups.size() > 0) {
+        populateSearchGroupComboBox();
+        cbGroup.setItems(searchGroupsDisplayList);
+        System.out.println(searchGroupsDisplayList);
+        if (searchGroupsDisplayList.size() > 0) {
             cbGroup.getSelectionModel().selectFirst();
         }
+    }
+
+    public void populateSearchGroupComboBox() throws IOException {
+        searchGroupsDisplayList = FXCollections.observableArrayList();
+        searchGroupsDisplayList.addAll(groups);
+        // Add "All" to search List
+        searchGroupsDisplayList.add(0, new Group("All"));
     }
 
     @FXML
@@ -288,15 +293,15 @@ public class ContactController {
     public void openGroup() {
         Parent root;
         try {
+            Stage thisStage = (Stage) mainPanel.getScene().getWindow();
+            thisStage.close();
+
             root = FXMLLoader.load(Main.class.getResource("group.fxml"));
             Stage stage = new Stage();
             stage.setTitle("Groups Manager");
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
-            stage.showAndWait();
-
-            // refresh populating data
-            initialize();
+            stage.show();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -328,7 +333,6 @@ public class ContactController {
                         searchContactList.add(contact);
                     }
                 }
-
             }
         } else {
             // If selected group is not "All"
