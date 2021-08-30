@@ -4,5 +4,3 @@
 ,,,Steves,,,Jobs,,,089877,,,steves@apple.com,,,2021/08/09,,,Friends
 ,,,Lucky,,,Luckes,,,98894,,,luck@gmail.com,,,2021/08/23,,,Friends
 ,,,James,,,Smith,,,9878744345,,,jm@gmail.com,,,2021/08/09,,,Friends
-,,,sd,,,dasd,,,1234567890,,,1@sf.com,,,2021/08/03,,,Family
-,,,sdas,,,asd,,,1234567890,,,2@34.com,,,2021/08/09,,,Coworkers

@@ -38,15 +38,11 @@ public class GroupDAO {
         } finally {
             bw.close();
         }
-        System.out.println(groups);
         return groups;
     }
 
     //save all groups from a given list to a text file
     public static void saveGroupToFile() throws IOException {
-        for (Group group : groups) {
-            System.out.println(group.getName());
-        }
         Writer wr = null;
         StringBuilder result;
         try {

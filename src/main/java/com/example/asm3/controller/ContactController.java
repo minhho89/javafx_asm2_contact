@@ -54,12 +54,10 @@ public class ContactController {
 
     @FXML
     void initialize() throws IOException {
-        System.out.println("Initialize");
         contactsTable.setItems(contacts);
 
         populateSearchGroupComboBox();
         cbGroup.setItems(searchGroupsDisplayList);
-        System.out.println(searchGroupsDisplayList);
         if (searchGroupsDisplayList.size() > 0) {
             cbGroup.getSelectionModel().selectFirst();
         }
@@ -253,7 +251,6 @@ public class ContactController {
                 int index = contacts.indexOf(selectedContact);
                 Contact updatedContact = updateController.getInputContact();
                 contacts.set(index, updatedContact);
-                System.out.println(selectedContact);
                 // Save to file
                 ContactDAO.saveContactsToFile();
             }
@@ -290,23 +287,22 @@ public class ContactController {
     }
 
     @FXML
-    public void openGroup() {
+    public void openGroup() throws IOException {
         Parent root;
         try {
-            Stage thisStage = (Stage) mainPanel.getScene().getWindow();
-            thisStage.close();
-
             root = FXMLLoader.load(Main.class.getResource("group.fxml"));
             Stage stage = new Stage();
             stage.setTitle("Groups Manager");
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
-            stage.show();
+            stage.showAndWait();
 
         } catch (IOException e) {
             e.printStackTrace();
             return;
         }
+        // Reload table
+        contactsTable.refresh();
     }
 
     @FXML

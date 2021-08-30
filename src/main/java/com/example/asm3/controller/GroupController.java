@@ -1,6 +1,5 @@
 package com.example.asm3.controller;
 
-import com.example.asm3.Main;
 import com.example.asm3.dao.ContactDAO;
 import com.example.asm3.dao.GroupDAO;
 import com.example.asm3.entity.Contact;
@@ -8,18 +7,15 @@ import com.example.asm3.entity.Group;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Optional;
 
 
@@ -43,7 +39,6 @@ public class GroupController {
     static {
         try {
             groups = GroupDAO.loadGroup();
-            System.out.println(groups);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -73,36 +68,21 @@ public class GroupController {
 
     @FXML
     public void closeWindow() {
-        Parent root;
-        try {
-            // Close this stage
-            Stage thisStage = (Stage) mainPanel.getScene().getWindow();
-            thisStage.close();
-
-            // ReOpen Contact Management State
-            root = FXMLLoader.load(Main.class.getResource("contact.fxml"));
-            Stage stage = new Stage();
-            stage.setTitle("Contact Management System");
-            stage.setScene(new Scene(root));
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
+        Stage thisStage = (Stage) mainPanel.getScene().getWindow();
+        thisStage.close();
     }
 
     // TODO: move to DAO
     // Search using linear algorithm
-    public int search(String groupName) {
-        int index = 0;
+    public void search(String groupName) {
+        searchGroups.removeAll();
+        groupName = groupName.toLowerCase();
         for (Group group : groups) {
-            if (group.getName().equalsIgnoreCase(groupName)) {
-               return index;
+            if (group.getName().toLowerCase().contains(groupName)) {
+                searchGroups.add(group);
             }
-            index++;
         }
-        return -1;
+
     }
 
     @FXML
@@ -112,16 +92,19 @@ public class GroupController {
 
         if (!searchField.getText().isBlank()) {
             String searchingGroupName = searchField.getText();
-            int index = search(searchingGroupName);
-            if (index != -1) {
-                // If found
-                searchGroups.add(groups.get(index));
+            search(searchingGroupName);
+            if (searchGroups.size() > 0) {
                 groupListView.setItems(searchGroups);
             } else {
-                // If not
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("No result found");
+                alert.setHeaderText(null);
+                alert.setContentText("No result found");
+                alert.showAndWait();
             }
         } else {
-            groupListView.setItems(groups);
+//            groupListView.setItems(groups);
+            nameFieldBlankAlert();
         }
 
     }
@@ -129,9 +112,9 @@ public class GroupController {
     // Add new Group items to group
     @FXML
     public void addAction() throws IOException {
-        if (!groupNameField.getText().isBlank() || groupNameField.getText().trim() != "") {
+        if (!groupNameField.getText().isBlank()) {
             // Check duplicates
-            if (search(groupNameField.getText()) == -1) {
+            if (!isBelongsToGroups(groupNameField.getText())) {
                 // No duplicate -> add to group
                 groups.add(new Group(groupNameField.getText()));
 
@@ -153,24 +136,28 @@ public class GroupController {
                 a.showAndWait();
             }
         } else {
-            Alert a = new Alert((Alert.AlertType.ERROR));
-            a.setTitle("Cannot perform task");
-            a.setHeaderText(null);
-            a.setContentText("Please input a group name.");
-            a.showAndWait();
+            nameFieldBlankAlert();
         }
+    }
+
+    private void nameFieldBlankAlert() {
+        Alert a = new Alert((Alert.AlertType.ERROR));
+        a.setTitle("Cannot perform task");
+        a.setHeaderText(null);
+        a.setContentText("Please input a group name.");
+        a.showAndWait();
     }
 
     // Update group name
     @FXML
     public void updateAction() throws IOException {
-        if (groupNameField.getText() != null || groupNameField.getText().trim() != "") {
+        if (!groupNameField.getText().isBlank()) {
             Group selectedGroup = selectedGroup();
             if (selectedGroup != null) {
                 String oldName = groups.get(groups.indexOf(selectedGroup)).getName();
                 String newName = groupNameField.getText();
 
-                if (IsBelongsToGroups(newName)) {
+                if (isBelongsToGroups(newName)) {
                     // Check if newName equals to any existence group name or not
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Cannot perform task");
@@ -208,6 +195,9 @@ public class GroupController {
                     alert.showAndWait();
                 }
             }
+        } else {
+            // field is blank
+            nameFieldBlankAlert();
         }
     }
 
@@ -216,9 +206,9 @@ public class GroupController {
     @FXML
     public void deleteAction() throws IOException {
         Group selectedItem = selectedGroup();
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Confirmation");
-        alert.setHeaderText("Do you want to delete this group \"" + selectedItem + "\"");
+        alert.setHeaderText("Do you want to delete group \"" + selectedItem + "\"");
         alert.setContentText("Please note that all contacts belong to this group will be deleted together.");
         alert.getButtonTypes().setAll(ButtonType.OK, ButtonType.CANCEL);
 
@@ -239,7 +229,7 @@ public class GroupController {
 
     }
 
-    private boolean IsBelongsToGroups(Group checkingGroup) {
+    private boolean isBelongsToGroups(Group checkingGroup) {
         if (ContactDAO.getContacts() != null) {
             for (Contact contact : ContactDAO.getContacts()) {
                 if (contact.getGroup().equals(checkingGroup)) return true;
@@ -248,7 +238,7 @@ public class GroupController {
         return false;
     }
 
-    private boolean IsBelongsToGroups(String groupName) {
+    private boolean isBelongsToGroups(String groupName) {
         if (groups != null) {
             for (Group group : groups) {
                 if(group.getName().equalsIgnoreCase(groupName))
