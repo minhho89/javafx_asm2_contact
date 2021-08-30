@@ -107,7 +107,7 @@ public class GroupController {
 
     // Add new Group items to group
     @FXML
-    public void addAction()  {
+    public void addAction() throws IOException {
         if (!groupNameField.getText().isBlank() || groupNameField.getText().trim() != "") {
             // Check duplicates
             if (search(groupNameField.getText()) == -1) {
@@ -118,6 +118,7 @@ public class GroupController {
                 a.setHeaderText(null);
                 a.setContentText("New Group Has Been Added Successfully");
                 a.showAndWait();
+                GroupDAO.saveGroupToFile();
             } else {
                 // Inform user that input value duplicates
                 Alert a = new Alert(Alert.AlertType.ERROR);
@@ -137,7 +138,7 @@ public class GroupController {
 
     // Update group name
     @FXML
-    public void updateAction() {
+    public void updateAction() throws IOException {
         if (groupNameField.getText() != null || groupNameField.getText().trim() != "") {
             Group selectedGroup = selectedGroup();
             if (selectedGroup != null) {
@@ -162,6 +163,7 @@ public class GroupController {
                     alert.setHeaderText(null);
                     alert.setContentText("Group \"" + oldName + "\" has been renamed to \"" + newName + "\" successfully.");
                     alert.showAndWait();
+                    GroupDAO.saveGroupToFile();
                 } else {
                     // old group name is same with new name
                     Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -175,7 +177,7 @@ public class GroupController {
 
     //delete a group, delete failed if there are some contact is in deleted one
     @FXML
-    public void deleteAction()  {
+    public void deleteAction() throws IOException {
         Group selectedItem = selectedGroup();
         if(!IsBelongsToGroups(selectedItem)) {
             // delete
@@ -188,6 +190,7 @@ public class GroupController {
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 groups.remove(selectedItem);
+                GroupDAO.saveGroupToFile();
                 return;
             } else if (result.isPresent() && result.get() == ButtonType.CANCEL) {
                 return;

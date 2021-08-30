@@ -12,8 +12,6 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
 
-        GroupDAO.saveGroupToFile();
-
         Parent root = FXMLLoader.load(getClass().getResource("contact.fxml"));
         primaryStage.setTitle("Contact Management System");
         primaryStage.setScene(new Scene(root));

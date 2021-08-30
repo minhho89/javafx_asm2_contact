@@ -40,8 +40,18 @@ public class GroupDAO {
     }
 
     //save all groups from a given list to a text file
-    public static void saveGroupToFile()  {
-
+    public static void saveGroupToFile() throws IOException {
+        Writer wr = null;
+        StringBuilder result;
+        try {
+            wr = new FileWriter(FILE);
+            for (Group group : groups) {
+                result = new StringBuilder(group.getName() + "\n");
+                wr.write(result.toString());
+            }
+        } finally {
+            wr.close();
+        }
 
     }
 
