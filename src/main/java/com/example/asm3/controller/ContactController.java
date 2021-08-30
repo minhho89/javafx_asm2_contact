@@ -35,7 +35,7 @@ public class ContactController {
 
     private static ObservableList<Group> groups = GroupController.groups;
     private static ObservableList<Group> searchGroupsDisplayList = FXCollections.observableArrayList();;
-    public static ObservableList<Contact> contacts;
+    private static ObservableList<Contact> contacts;
 
     private static ObservableList<Contact> searchContactList;
 
@@ -52,6 +52,10 @@ public class ContactController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static ObservableList<Contact> getContacts() {
+        return contacts;
     }
 
     @FXML
@@ -291,7 +295,7 @@ public class ContactController {
             stage.setTitle("Groups Manager");
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
-            stage.showAndWait();
+            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
             return;

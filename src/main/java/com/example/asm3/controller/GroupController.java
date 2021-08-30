@@ -34,11 +34,10 @@ public class GroupController {
 
     public static ObservableList<Group> groups = FXCollections.observableArrayList();
     public static ObservableList<Group> searchGroups;
-    static ObservableList<Contact> contacts = FXCollections.observableArrayList();
+
 
     static {
         try {
-            contacts = ContactDAO.loadContacts();
             groups = GroupDAO.loadGroup();
         } catch (IOException e) {
             e.printStackTrace();
@@ -178,45 +177,37 @@ public class GroupController {
     }
 
     //delete a group, delete failed if there are some contact is in deleted one
+
     @FXML
     public void deleteAction() throws IOException {
         Group selectedItem = selectedGroup();
-        if(!IsBelongsToGroups(selectedItem)) {
-            // delete
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Confirmation");
-            alert.setHeaderText("Do you want to delete this group \"" + selectedItem + "\"");
-            alert.setContentText("Please note that all contacts belong to this group will be deleted together.");
-            alert.getButtonTypes().setAll(ButtonType.OK, ButtonType.CANCEL);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText("Do you want to delete this group \"" + selectedItem + "\"");
+        alert.setContentText("Please note that all contacts belong to this group will be deleted together.");
+        alert.getButtonTypes().setAll(ButtonType.OK, ButtonType.CANCEL);
 
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                groups.remove(selectedItem);
-                GroupDAO.saveGroupToFile();
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            // remove contacts
+            ContactController.getContacts().removeIf(contact -> contact.getGroup().equals(selectedItem));
+            ContactDAO.saveContactsToFile();
 
-                // remove contacts
-                for (Contact contact : contacts) {
-                    if (contact.getGroup().equals(selectedItem)) contacts.remove(contact);
-                }
+            // remove group
+            groups.remove(selectedItem);
+            GroupDAO.saveGroupToFile();
 
-                return;
-            } else if (result.isPresent() && result.get() == ButtonType.CANCEL) {
-                return;
-            }
-
-        } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Failed to delete Group");
-            alert.setHeaderText("The Group has some contact(s) in it");
-            alert.setContentText("Consider remove selected group out of relevant contact(s) before deleting it");
-            alert.showAndWait();
+            return;
+        } else if (result.isPresent() && result.get() == ButtonType.CANCEL) {
+            return;
         }
+
     }
 
 
     private boolean IsBelongsToGroups(Group checkingGroup) {
-        if (contacts != null) {
-            for (Contact contact : contacts) {
+        if (ContactDAO.getContacts() != null) {
+            for (Contact contact : ContactDAO.getContacts()) {
                 if (contact.getGroup().equals(checkingGroup)) return true;
             }
         }

@@ -30,6 +30,10 @@ public class ContactDAO {
         }
     }
 
+    public static ObservableList<Contact> getContacts() {
+        return contacts;
+    }
+
     public static ObservableList<Contact> loadContacts() throws IOException {
         contacts = FXCollections.observableArrayList();
         Scanner sc = null;
